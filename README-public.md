@@ -2,7 +2,11 @@
 
 Create UUIDs versions 1, 3, 4, 5, 6, 7 and 8 in transformations.
 
-[![eccenca Corporate Memory](https://img.shields.io/badge/eccenca-Corporate%20Memory-orange)](https://documentation.eccenca.com)   
+## Installation
+
+```
+cmemc admin workspace python install cmem-plugin-uuid
+```
 
 ## UUID1
 
@@ -202,6 +206,8 @@ Options:
 Default value: _UUID/32-character lowercase hexadecimal string_   
 ID: `from_format`
 
+  The UUID as a 16-byte string (containing the six integer fields in big-endian byte order).
+- **16-byte string (little-endian)** (_bytes_le_)
 
 #### To
 
@@ -224,12 +230,3 @@ Options:
 
 Default value: _32-character lowercase hexadecimal string_  
 ID: `to_format`
-
-<br>
-
-## Development
-
-- Run [task](https://taskfile.dev/) to see all major development tasks.
-- Use [pre-commit](https://pre-commit.com/) to avoid errors before commit.
-- This repository was created with [this copier template](https://github.com/eccenca/cmem-plugin-template).
-
