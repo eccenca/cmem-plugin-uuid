@@ -170,7 +170,7 @@ excluded.
 
 ## UUID1 to UUID6
 
-Generate a UUID version 6 object from a UUID version 1 object. The input needs to be a valid UUIDv1
+Generate a UUID version 6 from a UUID version 1. The input needs to be a valid UUIDv1
 hexdecimal string.
 
 <br>
