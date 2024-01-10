@@ -18,34 +18,6 @@ from cmem_plugin_uuid.utils import (
 
 
 @Plugin(
-    label="UUID1 to UUID6",
-    categories=["Value", "Identifier"],
-    description="Generate UUIDv6 from a UUIDv1.",
-    documentation="""
-UUIDv6 is a field-compatible version of UUIDv1, reordered for
-improved DB locality. It is expected that UUIDv6 will primarily be
-used in contexts where there are existing v1 UUIDs. Systems that do
-not involve legacy UUIDv1 SHOULD consider using UUIDv7 instead.
-""",
-)
-class UUID1ToUUID6(TransformPlugin):
-    """UUID1 to UUID6 Transform Plugin"""
-
-    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                for _ in collection:
-                    try:
-                        result += [str(uuid6.uuid1_to_uuid6(uuid.UUID(_)))]
-                    except ValueError as exc:
-                        raise ValueError(f"{_}  is not a valid UUIDv1 string") from exc
-        else:
-            raise IOError("No input for UUID1 to UUID6")
-        return result
-
-
-@Plugin(
     label="UUID1",
     categories=["Value", "Identifier"],
     description="Generate a UUIDv1 from a host ID, sequence number, and the "
@@ -98,133 +70,6 @@ class UUID1(TransformPlugin):
                 ]
         else:
             result += [str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq))]
-        return result
-
-
-@Plugin(
-    label="UUID6",
-    categories=["Value", "Identifier"],
-    description="Generate a UUIDv6 from a host ID, sequence number, and the "
-    "current time",
-    documentation="""
-UUIDv6 is generated from a host ID, sequence number, and the current
-time.
-
-UUIDv6 is a field-compatible version of UUIDv1, reordered for
-improved DB locality. It is expected that UUIDv6 will primarily be
-used in contexts where there are existing v1 UUIDs. Systems that do
-not involve legacy UUIDv1 SHOULD consider using UUIDv7 instead.
-""",
-    parameters=[
-        PluginParameter(
-            name="node",
-            label="Node (default: hardware address)",
-            description=(
-                'Node value in the form "01:23:45:67:89:AB", 01-23-45-67-89-AB", or '
-                '"0123456789AB". If not given, a random 48-bit number is chosen.'
-            ),
-            default_value=None,
-        ),
-        PluginParameter(
-            name="clock_seq",
-            label="Clock sequence (default: random)",
-            description=(
-                "If clock sequence is given, it is used as the sequence number. "
-                "Otherwise a random 14-bit number is chosen."
-            ),
-            default_value=None,
-        ),
-    ],
-)
-class UUID6(TransformPlugin):
-    """UUID6 Transform Plugin"""
-
-    def __init__(
-        self,
-        node=None,
-        clock_seq=None,
-    ):
-        self.node = node_to_int(node) if node else None
-        self.clock_seq = clock_seq_to_int(clock_seq) if clock_seq else None
-
-    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [
-                    str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))
-                    for _ in collection
-                ]
-        else:
-            result += [str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))]
-        return result
-
-
-@Plugin(
-    label="UUID7",
-    categories=["Value", "Identifier"],
-    description="Generate a UUIDv7 from a random number, and the current time.",
-    documentation="""UUIDv7 features a time-ordered value field derived from the
-widely implemented and well known Unix Epoch timestamp source, the
-number of milliseconds since midnight 1 Jan 1970 UTC, leap seconds
-excluded. As well as improved entropy characteristics over versions
-1 or 6.
-Implementations SHOULD utilize UUIDv7 over UUIDv1 and
-6 if possible.
-""",
-)
-class UUID7(TransformPlugin):
-    """UUID7 Transform Plugin"""
-
-    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [str(uuid6.uuid7()) for _ in collection]
-        else:
-            result += [str(uuid6.uuid7())]
-        return result
-
-
-@Plugin(
-    label="UUID8",
-    categories=["Value", "Identifier"],
-    description="Generate a UUIDv8 from a random number, and the current time.",
-    documentation="""UUIDv8 features a time-ordered value field derived from the
-widely implemented and well known Unix Epoch timestamp source, the
-number of nanoseconds since midnight 1 Jan 1970 UTC, leap seconds
-excluded.
-""",
-)
-class UUID8(TransformPlugin):
-    """UUID8 Transform Plugin"""
-
-    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [str(uuid6.uuid8()) for _ in collection]
-        else:
-            result += [str(uuid6.uuid8())]
-        return result
-
-
-@Plugin(
-    label="UUID4",
-    categories=["Value", "Identifier"],
-    description="Generate a random UUIDv4.",
-    documentation="""UUIDv4 specifies a random UUID.""",
-)
-class UUID4(TransformPlugin):
-    """UUID4 Transform Plugin"""
-
-    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [str(uuid.uuid4()) for _ in collection]
-        else:
-            result += [str(uuid.uuid4())]
         return result
 
 
@@ -288,6 +133,25 @@ class UUID3(TransformPlugin):
 
 
 @Plugin(
+    label="UUID4",
+    categories=["Value", "Identifier"],
+    description="Generate a random UUIDv4.",
+    documentation="""UUIDv4 specifies a random UUID.""",
+)
+class UUID4(TransformPlugin):
+    """UUID4 Transform Plugin"""
+
+    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
+        result = []
+        if len(inputs) != 0:
+            for collection in inputs:
+                result += [str(uuid.uuid4()) for _ in collection]
+        else:
+            result += [str(uuid.uuid4())]
+        return result
+
+
+@Plugin(
     label="UUID5",
     categories=["Value", "Identifier"],
     description="Generate a UUIDv5",
@@ -347,21 +211,138 @@ class UUID5(TransformPlugin):
 
 
 @Plugin(
-    label="UUID Version",
+    label="UUID6",
     categories=["Value", "Identifier"],
-    description="Outputs UUID version number of input",
-    documentation="""Input: UUID string, output: UUID version number of input.""",
+    description="Generate a UUIDv6 from a host ID, sequence number, and the "
+    "current time",
+    documentation="""
+UUIDv6 is generated from a host ID, sequence number, and the current
+time.
+
+UUIDv6 is a field-compatible version of UUIDv1, reordered for
+improved DB locality. It is expected that UUIDv6 will primarily be
+used in contexts where there are existing v1 UUIDs. Systems that do
+not involve legacy UUIDv1 SHOULD consider using UUIDv7 instead.
+""",
+    parameters=[
+        PluginParameter(
+            name="node",
+            label="Node (default: hardware address)",
+            description=(
+                'Node value in the form "01:23:45:67:89:AB", 01-23-45-67-89-AB", or '
+                '"0123456789AB". If not given, a random 48-bit number is chosen.'
+            ),
+            default_value=None,
+        ),
+        PluginParameter(
+            name="clock_seq",
+            label="Clock sequence (default: random)",
+            description=(
+                "If clock sequence is given, it is used as the sequence number. "
+                "Otherwise a random 14-bit number is chosen."
+            ),
+            default_value=None,
+        ),
+    ],
 )
-class UUIDVersion(TransformPlugin):
-    """Outputs UUID version number"""
+class UUID6(TransformPlugin):
+    """UUID6 Transform Plugin"""
+
+    def __init__(
+        self,
+        node=None,
+        clock_seq=None,
+    ):
+        self.node = node_to_int(node) if node else None
+        self.clock_seq = clock_seq_to_int(clock_seq) if clock_seq else None
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         result = []
         if len(inputs) != 0:
             for collection in inputs:
-                result += [str(uuid.UUID(_).version) for _ in collection]
+                result += [
+                    str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))
+                    for _ in collection
+                ]
         else:
-            raise IOError("No input for UUID Version")
+            result += [str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))]
+        return result
+
+
+@Plugin(
+    label="UUID1 to UUID6",
+    categories=["Value", "Identifier"],
+    description="Generate UUIDv6 from a UUIDv1.",
+    documentation="""
+UUIDv6 is a field-compatible version of UUIDv1, reordered for
+improved DB locality. It is expected that UUIDv6 will primarily be
+used in contexts where there are existing v1 UUIDs. Systems that do
+not involve legacy UUIDv1 SHOULD consider using UUIDv7 instead.
+""",
+)
+class UUID1ToUUID6(TransformPlugin):
+    """UUID1 to UUID6 Transform Plugin"""
+
+    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
+        result = []
+        if len(inputs) != 0:
+            for collection in inputs:
+                for _ in collection:
+                    try:
+                        result += [str(uuid6.uuid1_to_uuid6(uuid.UUID(_)))]
+                    except ValueError as exc:
+                        raise ValueError(f"{_}  is not a valid UUIDv1 string") from exc
+        else:
+            raise IOError("No input for UUID1 to UUID6")
+        return result
+
+
+@Plugin(
+    label="UUID7",
+    categories=["Value", "Identifier"],
+    description="Generate a UUIDv7 from a random number, and the current time.",
+    documentation="""UUIDv7 features a time-ordered value field derived from the
+widely implemented and well known Unix Epoch timestamp source, the
+number of milliseconds since midnight 1 Jan 1970 UTC, leap seconds
+excluded. As well as improved entropy characteristics over versions
+1 or 6.
+Implementations SHOULD utilize UUIDv7 over UUIDv1 and
+6 if possible.
+""",
+)
+class UUID7(TransformPlugin):
+    """UUID7 Transform Plugin"""
+
+    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
+        result = []
+        if len(inputs) != 0:
+            for collection in inputs:
+                result += [str(uuid6.uuid7()) for _ in collection]
+        else:
+            result += [str(uuid6.uuid7())]
+        return result
+
+
+@Plugin(
+    label="UUID8",
+    categories=["Value", "Identifier"],
+    description="Generate a UUIDv8 from a random number, and the current time.",
+    documentation="""UUIDv8 features a time-ordered value field derived from the
+widely implemented and well known Unix Epoch timestamp source, the
+number of nanoseconds since midnight 1 Jan 1970 UTC, leap seconds
+excluded.
+""",
+)
+class UUID8(TransformPlugin):
+    """UUID8 Transform Plugin"""
+
+    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
+        result = []
+        if len(inputs) != 0:
+            for collection in inputs:
+                result += [str(uuid6.uuid8()) for _ in collection]
+        else:
+            result += [str(uuid6.uuid8())]
         return result
 
 
@@ -459,4 +440,23 @@ class UUIDConvert(TransformPlugin):
                 result += [self.convert_uuid(_) for _ in collection]
         else:
             raise IOError("No input for UUID Convert")
+        return result
+
+
+@Plugin(
+    label="UUID Version",
+    categories=["Value", "Identifier"],
+    description="Outputs UUID version number of input",
+    documentation="""Input: UUID string, output: UUID version number of input.""",
+)
+class UUIDVersion(TransformPlugin):
+    """Outputs UUID version number"""
+
+    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
+        result = []
+        if len(inputs) != 0:
+            for collection in inputs:
+                result += [str(uuid.UUID(_).version) for _ in collection]
+        else:
+            raise IOError("No input for UUID Version")
         return result

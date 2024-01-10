@@ -4,28 +4,16 @@ import uuid6
 from hashlib import md5, sha1
 from cmem_plugin_uuid.transform import (
     UUID1,
-    UUID6,
-    UUID1ToUUID6,
     UUID3,
     UUID4,
     UUID5,
+    UUID6,
+    UUID1ToUUID6,
     UUID7,
     UUID8,
-    UUIDVersion,
     UUIDConvert,
+    UUIDVersion,
 )
-
-
-# Test UUID1ToUUID6
-
-
-def test_uuid1_to_uuid6_with_input():
-    input_values = [str(uuid.uuid1()), str(uuid.uuid1())]
-    result = UUID1ToUUID6().transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2
-    for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 6
-        assert item == str(uuid6.uuid1_to_uuid6(uuid.UUID(input_values[i])))
 
 
 # Test UUID1
@@ -61,90 +49,6 @@ def test_uuid1_with_parameter_setting():
     assert len(result) == 2
     for item in result:
         assert uuid.UUID(item).version == 1
-
-
-# Test UUID6
-
-
-def test_uuid6_without_input():
-    result = UUID6(
-        node=None,
-        clock_seq=None,
-    ).transform(inputs=[])
-    assert len(result) == 1
-    for item in result:
-        assert uuid.UUID(item).version == 6
-
-
-def test_uuid6_with_value_input():
-    input_values = [["input1"], ["input2"]]
-    result = UUID6(
-        node=None,
-        clock_seq=None,
-    ).transform(inputs=input_values)
-    assert len(result) == 2
-    for item in result:
-        assert uuid.UUID(item).version == 6
-
-
-def test_uuid6_with_parameter_setting():
-    input_values = [["input1"], ["input2"]]
-    result = UUID6(
-        node="2001",
-        clock_seq="1234",
-    ).transform(inputs=input_values)
-    assert len(result) == 2
-    for item in result:
-        assert uuid.UUID(item).version == 6
-
-
-# Test UUID7
-
-
-def test_uuid7_without_input():
-    result = UUID7().transform(inputs=[])
-    assert len(result) == 1
-    for item in result:
-        assert uuid.UUID(item).version == 7
-
-
-def test_uuid7_with_input():
-    result = UUID7().transform(inputs=[["input1"], ["input2"]])
-    assert len(result) == 2
-    for item in result:
-        assert uuid.UUID(item).version == 7
-
-
-# Test UUID8
-
-
-def test_uuid8_without_input():
-    result = UUID8().transform(inputs=[])
-    for item in result:
-        assert uuid.UUID(item).version == 8
-
-
-def test_uuid8_with_input():
-    result = UUID8().transform(inputs=[["input1"], ["input2"]])
-    assert len(result) == 2
-    for item in result:
-        assert uuid.UUID(item).version == 8
-
-
-# Test UUID4
-
-
-def test_uuid4_without_input():
-    result = UUID4().transform(inputs=[])
-    for item in result:
-        assert uuid.UUID(item).version == 4
-
-
-def test_uuid4_with_input():
-    result = UUID4().transform(inputs=[["input1"], ["input2"]])
-    assert len(result) == 2
-    for item in result:
-        assert uuid.UUID(item).version == 4
 
 
 # Test UUID3
@@ -257,6 +161,22 @@ def test_uuid3_with_empty_namespace():
             )
         )
     ]
+
+
+# Test UUID4
+
+
+def test_uuid4_without_input():
+    result = UUID4().transform(inputs=[])
+    for item in result:
+        assert uuid.UUID(item).version == 4
+
+
+def test_uuid4_with_input():
+    result = UUID4().transform(inputs=[["input1"], ["input2"]])
+    assert len(result) == 2
+    for item in result:
+        assert uuid.UUID(item).version == 4
 
 
 # Test UUID5
@@ -373,30 +293,89 @@ def test_uuid5_with_empty_namespace():
     ]
 
 
-# Test UUIDVersion
+# Test UUID6
 
 
-def test_uuid_version():
-    input_values = [
-        str(uuid.uuid1()),
-        str(uuid.uuid3(name="test", namespace=uuid.NAMESPACE_URL)),
-        str(uuid.uuid4()),
-        str(uuid.uuid5(name="test", namespace=uuid.NAMESPACE_URL)),
-        str(uuid6.uuid6()),
-        str(uuid6.uuid7()),
-        str(uuid6.uuid8()),
-        str(uuid6.uuid1_to_uuid6(uuid.uuid1())),
-    ]
-    result = UUIDVersion().transform(inputs=[input_values])
-    assert len(result) == 8
-    assert result == [str(i) for i in [1, 3, 4, 5, 6, 7, 8, 6]]
+def test_uuid6_without_input():
+    result = UUID6(
+        node=None,
+        clock_seq=None,
+    ).transform(inputs=[])
+    assert len(result) == 1
+    for item in result:
+        assert uuid.UUID(item).version == 6
+
+
+def test_uuid6_with_value_input():
+    input_values = [["input1"], ["input2"]]
+    result = UUID6(
+        node=None,
+        clock_seq=None,
+    ).transform(inputs=input_values)
+    assert len(result) == 2
+    for item in result:
+        assert uuid.UUID(item).version == 6
+
+
+def test_uuid6_with_parameter_setting():
+    input_values = [["input1"], ["input2"]]
+    result = UUID6(
+        node="2001",
+        clock_seq="1234",
+    ).transform(inputs=input_values)
+    assert len(result) == 2
+    for item in result:
+        assert uuid.UUID(item).version == 6
+
+
+# Test UUID1ToUUID6
+
+
+def test_uuid1_to_uuid6_with_input():
+    input_values = [str(uuid.uuid1()), str(uuid.uuid1())]
+    result = UUID1ToUUID6().transform(inputs=[[i] for i in input_values])
+    assert len(result) == 2
+    for i, item in enumerate(result):
+        assert uuid.UUID(item).version == 6
+        assert item == str(uuid6.uuid1_to_uuid6(uuid.UUID(input_values[i])))
+
+
+# Test UUID7
+
+
+def test_uuid7_without_input():
+    result = UUID7().transform(inputs=[])
+    assert len(result) == 1
+    for item in result:
+        assert uuid.UUID(item).version == 7
+
+
+def test_uuid7_with_input():
+    result = UUID7().transform(inputs=[["input1"], ["input2"]])
+    assert len(result) == 2
+    for item in result:
+        assert uuid.UUID(item).version == 7
+
+
+# Test UUID8
+
+
+def test_uuid8_without_input():
+    result = UUID8().transform(inputs=[])
+    for item in result:
+        assert uuid.UUID(item).version == 8
+
+
+def test_uuid8_with_input():
+    result = UUID8().transform(inputs=[["input1"], ["input2"]])
+    assert len(result) == 2
+    for item in result:
+        assert uuid.UUID(item).version == 8
 
 
 # Test UUIDConvert
-# def test_uuid4_without_input():
-#     result = UUID4().transform(inputs=[])
-#     for item in result:
-#         assert uuid.UUID(item).version == 4
+
+
 def test_uuid_convert_to_uuid():
     test_uuid = uuid.uuid4()
     input_values = [str(test_uuid)]
@@ -449,3 +428,22 @@ def test_uuid_convert_from_urn():
         inputs=[input_values]
     )
     assert result == [str(test_uuid)]
+
+
+# Test UUIDVersion
+
+
+def test_uuid_version():
+    input_values = [
+        str(uuid.uuid1()),
+        str(uuid.uuid3(name="test", namespace=uuid.NAMESPACE_URL)),
+        str(uuid.uuid4()),
+        str(uuid.uuid5(name="test", namespace=uuid.NAMESPACE_URL)),
+        str(uuid6.uuid6()),
+        str(uuid6.uuid7()),
+        str(uuid6.uuid8()),
+        str(uuid6.uuid1_to_uuid6(uuid.uuid1())),
+    ]
+    result = UUIDVersion().transform(inputs=[input_values])
+    assert len(result) == 8
+    assert result == [str(i) for i in [1, 3, 4, 5, 6, 7, 8, 6]]

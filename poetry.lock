@@ -222,17 +222,18 @@ requests-toolbelt = ">=1.0.0,<2.0.0"
 
 [[package]]
 name = "cmem-plugin-base"
-version = "4.4.0"
+version = "4.5.0"
 description = "Base classes for developing eccenca Coporate Memory plugins."
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "cmem_plugin_base-4.4.0-py3-none-any.whl", hash = "sha256:3075b4c6b5d2194f6cd610bc8aec25d096d6f6aeda4859799e07268e1e4f26e9"},
-    {file = "cmem_plugin_base-4.4.0.tar.gz", hash = "sha256:6ff24a0db8a3705a7395525d325bef48e1969e21fe9533b9397bff1d8ac23ba7"},
+    {file = "cmem_plugin_base-4.5.0-py3-none-any.whl", hash = "sha256:94f3a69c32e6004cca70077f4e5c21e13ca39a281ba11a0838b4003a5f70841b"},
+    {file = "cmem_plugin_base-4.5.0.tar.gz", hash = "sha256:ba9942efa09708baffe7fcbb08b28fc1a5b772825509eeb850f438802305af5f"},
 ]
 
 [package.dependencies]
 cmem-cmempy = ">=23.3.0"
+python-ulid = ">=2.2.0,<3.0.0"
 
 [[package]]
 name = "colorama"
@@ -422,20 +423,20 @@ smmap = ">=3.0.1,<6"
 
 [[package]]
 name = "gitpython"
-version = "3.1.40"
+version = "3.1.41"
 description = "GitPython is a Python library used to interact with Git repositories"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "GitPython-3.1.40-py3-none-any.whl", hash = "sha256:cf14627d5a8049ffbf49915732e5eddbe8134c3bdb9d476e6182b676fc573f8a"},
-    {file = "GitPython-3.1.40.tar.gz", hash = "sha256:22b126e9ffb671fdd0c129796343a02bf67bf2994b35449ffc9321aa755e18a4"},
+    {file = "GitPython-3.1.41-py3-none-any.whl", hash = "sha256:c36b6634d069b3f719610175020a9aed919421c87552185b085e04fbbdb10b7c"},
+    {file = "GitPython-3.1.41.tar.gz", hash = "sha256:ed66e624884f76df22c8e16066d567aaa5a37d5b5fa19db2c6df6f7156db9048"},
 ]
 
 [package.dependencies]
 gitdb = ">=4.0.1,<5"
 
 [package.extras]
-test = ["black", "coverage[toml]", "ddt (>=1.1.1,!=1.4.3)", "mock", "mypy", "pre-commit", "pytest", "pytest-cov", "pytest-instafail", "pytest-subtests", "pytest-sugar"]
+test = ["black", "coverage[toml]", "ddt (>=1.1.1,!=1.4.3)", "mock", "mypy", "pre-commit", "pytest (>=7.3.1)", "pytest-cov", "pytest-instafail", "pytest-mock", "pytest-sugar", "sumtypes"]
 
 [[package]]
 name = "idna"
@@ -1113,6 +1114,17 @@ lint = ["black (==22.12)", "isort (==5.11.4)", "mypy (==0.991)", "ruff (==0.0.27
 test = ["covdefaults (>=2.2.2)", "coverage (>=7.0.5)", "flaky (>=3.7)", "pytest (>=7.2)", "pytest-xdist (>=3.1)"]
 
 [[package]]
+name = "python-ulid"
+version = "2.2.0"
+description = "Universally unique lexicographically sortable identifier"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "python_ulid-2.2.0-py3-none-any.whl", hash = "sha256:ec2e69292c0b7c338a07df5e15b05270be6823675c103383e74d1d531945eab5"},
+    {file = "python_ulid-2.2.0.tar.gz", hash = "sha256:9ec777177d396880d94be49ac7eb4ae2cd4a7474448bfdbfe911537add970aeb"},
+]
+
+[[package]]
 name = "pyyaml"
 version = "6.0.1"
 description = "YAML parser and emitter for Python"
@@ -1464,4 +1476,4 @@ test = ["pytest (>=3.0.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "6e8c93daa9164564a68f9867b90ec86c15f17f0cc9cf09a989b930b0e950a130"
+content-hash = "bb10630cb702a85a83aa854a58424d1d34e6dd8947dcf34b19be6679d42eeb28"
