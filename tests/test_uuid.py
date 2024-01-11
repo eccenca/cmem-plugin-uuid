@@ -440,10 +440,10 @@ def test_uuid_version():
         str(uuid.uuid4()),
         str(uuid.uuid5(name="test", namespace=uuid.NAMESPACE_URL)),
         str(uuid6.uuid6()),
+        str(uuid6.uuid1_to_uuid6(uuid.uuid1())),
         str(uuid6.uuid7()),
         str(uuid6.uuid8()),
-        str(uuid6.uuid1_to_uuid6(uuid.uuid1())),
     ]
     result = UUIDVersion().transform(inputs=[input_values])
     assert len(result) == 8
-    assert result == [str(i) for i in [1, 3, 4, 5, 6, 7, 8, 6]]
+    assert result == [str(i) for i in [1, 3, 4, 5, 6, 6, 7, 8]]
