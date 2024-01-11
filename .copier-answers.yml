@@ -1,0 +1,10 @@
+# Changes here will be overwritten by Copier
+_commit: v5.3.0
+_src_path: gh:eccenca/cmem-plugin-template
+author_mail: info@eccenca.com
+author_name: eccenca GmbH
+github_page: ''
+project_description: Generate UUIDv1, 3, 4, 5, 6, 7 and 8 literals.
+project_slug: uuid
+pypi: false
+
