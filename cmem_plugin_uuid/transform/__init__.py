@@ -353,7 +353,9 @@ class UUID8(TransformPlugin):
     documentation="""Convert a UUID string with 32 hexadecimal digits to a 16-byte
     string containing the six integer fields in big-endian byte order, a 16-byte string
     the six integer fields in little-endian byte order, a 32-character lowercase
-    hexadecimal string, a 128-bit integer, or a URN as specified in RFC 4122.""",
+    hexadecimal string, a 128-bit integer, or a URN. Strings in the correct format,
+    however, the log will show a warning if the input does not comply with the standard
+    specified in RFC 4122 and the proposed updates""",
     parameters=[
         PluginParameter(
             param_type=uuid_convert_param_in,
@@ -413,7 +415,7 @@ class UUIDConvert(TransformPlugin):
                 ) from exc
 
         elif self.from_ == "urn":
-            if not uuid_string.startswith("urn:uuid:"):
+            if not uuid_string.lower().startswith("urn:uuid:"):
                 raise ValueError(f"{uuid_string} is not a valid UUID URN")
 
             try:
