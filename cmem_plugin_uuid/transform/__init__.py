@@ -390,7 +390,7 @@ class UUIDConvert(TransformPlugin):
         if not re.match(pattern, str(test_uuid)):
             self.log.warning(
                 f"{uuid_string} is not a valid UUID as specified in RFC 4122 and "
-                f"proposed IETF revisions"
+                f"the proposed updates"
             )
 
     def convert_uuid(self, uuid_string, result=None):
@@ -406,7 +406,7 @@ class UUIDConvert(TransformPlugin):
 
         elif self.from_ == "int":
             try:
-                in_uuid = uuid.UUID(format(int(uuid_string), "x"))
+                in_uuid = uuid.UUID(int=int(uuid_string))
             except ValueError as exc:
                 raise ValueError(
                     f"{uuid_string} is not a valid 128-bit integer UUID value"

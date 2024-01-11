@@ -179,7 +179,9 @@ Outputs the UUID version from a UUID input string.
 
 ## UUID Convert
 
-Convert a UUID from one format to another.
+Convert a UUID from one format to another. The plugin accepts strings in the correct format, however, the log will show
+a warning if the input does not comply with the standard specified in [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122) and the 
+[proposed updates](https://www.ietf.org/archive/id/draft-peabody-dispatch-new-uuid-format-01.html).
 
 ### Parameters
 
@@ -197,7 +199,7 @@ Options:
   The UUID as a 128-bit integer.
 - **URN** (_urn_):
 
-  The UUID as a URN as specified in [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122).
+  The UUID as a URN.
 
 Default value: _UUID/32-character lowercase hexadecimal string_   
 ID: `from_format`
