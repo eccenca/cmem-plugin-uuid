@@ -60,12 +60,6 @@ the namespace, the output is the same as that of the standard CMEM UUID operator
 Default value: _Empty value_  
 ID: `namespace`
 
-#### Use input as namespace
-
-If enabled, the input value is used for the namespace.
-
-Default value: _False_  
-ID: `input_as_namespace`
 
 #### Namespace as UUID
 
