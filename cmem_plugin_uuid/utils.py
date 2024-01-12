@@ -1,11 +1,11 @@
 """Utilities for cmem-plugin-uuid"""
 
 import uuid
-from hashlib import md5, sha1
-from collections import OrderedDict
 from binascii import unhexlify
-from cmem_plugin_base.dataintegration.parameter.choice import ChoiceParameterType
+from collections import OrderedDict
+from hashlib import md5, sha1
 
+from cmem_plugin_base.dataintegration.parameter.choice import ChoiceParameterType
 
 uuid3_uuid5_namespace_param = ChoiceParameterType(
     OrderedDict(
@@ -50,8 +50,7 @@ uuid_convert_param_out.allow_only_autocompleted_values = True
 
 
 def node_to_int(node: str):
-    """
-    Convert a string representation of a node byte array to an integer.
+    """Convert a string representation of a node byte array to an integer.
     E.g. 01:23:45:67:89:AB -> 1250999896491
     """
     try:
@@ -71,8 +70,7 @@ def clock_seq_to_int(clock_seq: str):
 
 
 def namespace_hex(value, uuid_version):
-    """
-    Return hex string from input value
+    """Return hex string from input value
     """
     hex_value = None
     if uuid_version == 3:
@@ -87,8 +85,7 @@ def get_namespace_uuid(
     namespace=None,
     uuid_version=None,
 ):
-    """returns namespace UUID"""
-
+    """Returns namespace UUID"""
     namespace_uuid = None
 
     if namespace == "namespace_url":
@@ -103,8 +100,6 @@ def get_namespace_uuid(
         if namespace_as_uuid:
             namespace_uuid = uuid.UUID(namespace)
         else:
-            namespace_uuid = uuid.UUID(
-                hex=namespace_hex(namespace, uuid_version), version=1
-            )
+            namespace_uuid = uuid.UUID(hex=namespace_hex(namespace, uuid_version), version=1)
 
     return namespace_uuid

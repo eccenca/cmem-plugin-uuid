@@ -1,20 +1,21 @@
 """Plugin tests."""
 import uuid
-import uuid6
 from hashlib import md5, sha1
+
+import uuid6
+
 from cmem_plugin_uuid.transform import (
     UUID1,
     UUID3,
     UUID4,
     UUID5,
     UUID6,
-    UUID1ToUUID6,
     UUID7,
     UUID8,
+    UUID1ToUUID6,
     UUIDConvert,
     UUIDVersion,
 )
-
 
 # Test UUID1
 
@@ -64,9 +65,7 @@ def test_uuid3_with_namespace_param_as_uuid():
     assert len(result) == 2
     for i, item in enumerate(result):
         assert uuid.UUID(item).version == 3
-        assert item == str(
-            uuid.uuid3(namespace=uuid.UUID(namespace), name=input_values[i])
-        )
+        assert item == str(uuid.uuid3(namespace=uuid.UUID(namespace), name=input_values[i]))
 
 
 def test_uuid3_with_namespace_param_as_string():
@@ -192,9 +191,7 @@ def test_uuid5_with_namespace_param_as_uuid():
     assert len(result) == 2
     for i, item in enumerate(result):
         assert uuid.UUID(item).version == 5
-        assert item == str(
-            uuid.uuid5(namespace=uuid.UUID(namespace), name=input_values[i])
-        )
+        assert item == str(uuid.uuid5(namespace=uuid.UUID(namespace), name=input_values[i]))
 
 
 def test_uuid5_with_namespace_param_as_string():
@@ -284,9 +281,7 @@ def test_uuid5_with_empty_namespace():
     assert result == [
         str(
             uuid.UUID(
-                sha1(input_values[0][0].encode(), usedforsecurity=False).hexdigest()[
-                    :32
-                ],
+                sha1(input_values[0][0].encode(), usedforsecurity=False).hexdigest()[:32],
                 version=5,
             )
         )
@@ -379,54 +374,42 @@ def test_uuid8_with_input():
 def test_uuid_convert_to_uuid():
     test_uuid = uuid.uuid4()
     input_values = [str(test_uuid)]
-    result = UUIDConvert(from_format="uuid_hex", to_format="uuid").transform(
-        inputs=[input_values]
-    )
+    result = UUIDConvert(from_format="uuid_hex", to_format="uuid").transform(inputs=[input_values])
     assert result == [str(test_uuid)]
 
 
 def test_uuid_convert_to_hex():
     test_uuid = uuid.uuid4()
     input_values = [str(test_uuid)]
-    result = UUIDConvert(from_format="uuid_hex", to_format="hex").transform(
-        inputs=[input_values]
-    )
+    result = UUIDConvert(from_format="uuid_hex", to_format="hex").transform(inputs=[input_values])
     assert result == [str(test_uuid.hex)]
 
 
 def test_uuid_convert_to_int():
     test_uuid = uuid.uuid4()
     input_values = [str(test_uuid)]
-    result = UUIDConvert(from_format="uuid_hex", to_format="int").transform(
-        inputs=[input_values]
-    )
+    result = UUIDConvert(from_format="uuid_hex", to_format="int").transform(inputs=[input_values])
     assert result == [str(test_uuid.int)]
 
 
 def test_uuid_convert_to_urn():
     test_uuid = uuid.uuid4()
     input_values = [str(test_uuid)]
-    result = UUIDConvert(from_format="uuid_hex", to_format="urn").transform(
-        inputs=[input_values]
-    )
+    result = UUIDConvert(from_format="uuid_hex", to_format="urn").transform(inputs=[input_values])
     assert result == [str(test_uuid.urn)]
 
 
 def test_uuid_convert_from_int():
     test_uuid = uuid.uuid4()
     input_values = [str(test_uuid.int)]
-    result = UUIDConvert(from_format="int", to_format="uuid").transform(
-        inputs=[input_values]
-    )
+    result = UUIDConvert(from_format="int", to_format="uuid").transform(inputs=[input_values])
     assert result == [str(test_uuid)]
 
 
 def test_uuid_convert_from_urn():
     test_uuid = uuid.uuid4()
     input_values = [str(test_uuid.urn)]
-    result = UUIDConvert(from_format="urn", to_format="uuid").transform(
-        inputs=[input_values]
-    )
+    result = UUIDConvert(from_format="urn", to_format="uuid").transform(inputs=[input_values])
     assert result == [str(test_uuid)]
 
 

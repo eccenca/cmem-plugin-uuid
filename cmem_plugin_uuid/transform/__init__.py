@@ -1,27 +1,28 @@
 """UUID6 transform plugin module"""
-from typing import Sequence
 import re
 import uuid
+from collections.abc import Sequence
+
 import uuid6
 from cmem_plugin_base.dataintegration.description import Plugin, PluginParameter
 from cmem_plugin_base.dataintegration.plugins import TransformPlugin
 from cmem_plugin_base.dataintegration.types import BoolParameterType
+
 from cmem_plugin_uuid.utils import (
-    uuid3_uuid5_namespace_param,
-    uuid_convert_param_in,
-    uuid_convert_param_out,
-    node_to_int,
     clock_seq_to_int,
     get_namespace_uuid,
     namespace_hex,
+    node_to_int,
+    uuid3_uuid5_namespace_param,
+    uuid_convert_param_in,
+    uuid_convert_param_out,
 )
 
 
 @Plugin(
     label="UUID1",
     categories=["Value", "Identifier"],
-    description="Generate a UUIDv1 from a host ID, sequence number, and the "
-    "current time",
+    description="Generate a UUIDv1 from a host ID, sequence number, and the " "current time",
     documentation="""
 UUIDv1 is generated from a host ID, sequence number, and the current
 time.
@@ -65,8 +66,7 @@ class UUID1(TransformPlugin):
         if len(inputs) != 0:
             for collection in inputs:
                 result += [
-                    str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq))
-                    for _ in collection
+                    str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq)) for _ in collection
                 ]
         else:
             result += [str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq))]
@@ -128,7 +128,7 @@ class UUID3(TransformPlugin):
                     else:
                         result += [str(uuid.uuid3(namespace_uuid, _))]
         else:
-            raise IOError("No input for UUID3")
+            raise OSError("No input for UUID3")
         return result
 
 
@@ -206,15 +206,14 @@ class UUID5(TransformPlugin):
                     else:
                         result += [str(uuid.uuid5(namespace_uuid, _))]
         else:
-            raise IOError("No input for UUID5")
+            raise OSError("No input for UUID5")
         return result
 
 
 @Plugin(
     label="UUID6",
     categories=["Value", "Identifier"],
-    description="Generate a UUIDv6 from a host ID, sequence number, and the "
-    "current time",
+    description="Generate a UUIDv6 from a host ID, sequence number, and the " "current time",
     documentation="""
 UUIDv6 is generated from a host ID, sequence number, and the current
 time.
@@ -261,8 +260,7 @@ class UUID6(TransformPlugin):
         if len(inputs) != 0:
             for collection in inputs:
                 result += [
-                    str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))
-                    for _ in collection
+                    str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq)) for _ in collection
                 ]
         else:
             result += [str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))]
@@ -293,7 +291,7 @@ class UUID1ToUUID6(TransformPlugin):
                     except ValueError as exc:
                         raise ValueError(f"{_}  is not a valid UUIDv1 string") from exc
         else:
-            raise IOError("No input for UUID1 to UUID6")
+            raise OSError("No input for UUID1 to UUID6")
         return result
 
 
@@ -381,13 +379,9 @@ class UUIDConvert(TransformPlugin):
         self.to_ = to_format
 
     def uuid_validate(self, test_uuid, uuid_string):
+        """Warning if UUID string not standard (versions 1 to 8)
         """
-        Warning if UUID string not standard (versions 1 to 8)
-        """
-
-        pattern = (
-            r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
-        )
+        pattern = r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
 
         if not re.match(pattern, str(test_uuid)):
             self.log.warning(
@@ -396,15 +390,12 @@ class UUIDConvert(TransformPlugin):
             )
 
     def convert_uuid(self, uuid_string, result=None):
-        """convert UUID string"""
-
+        """Convert UUID string"""
         if self.from_ == "uuid_hex":
             try:
                 in_uuid = uuid.UUID(uuid_string)
             except ValueError as exc:
-                raise ValueError(
-                    f"{uuid_string} is not a valid 32-bit UUID string"
-                ) from exc
+                raise ValueError(f"{uuid_string} is not a valid 32-bit UUID string") from exc
 
         elif self.from_ == "int":
             try:
@@ -441,7 +432,7 @@ class UUIDConvert(TransformPlugin):
             for collection in inputs:
                 result += [self.convert_uuid(_) for _ in collection]
         else:
-            raise IOError("No input for UUID Convert")
+            raise OSError("No input for UUID Convert")
         return result
 
 
@@ -460,5 +451,5 @@ class UUIDVersion(TransformPlugin):
             for collection in inputs:
                 result += [str(uuid.UUID(_).version) for _ in collection]
         else:
-            raise IOError("No input for UUID Version")
+            raise OSError("No input for UUID Version")
         return result
