@@ -49,43 +49,40 @@ uuid_convert_param_out = ChoiceParameterType(
 uuid_convert_param_out.allow_only_autocompleted_values = True
 
 
-def node_to_int(node: str):
-    """Convert a string representation of a node byte array to an integer.
-    E.g. 01:23:45:67:89:AB -> 1250999896491
-    """
+def node_to_int(node: str) -> int:
+    """Convert a string representation of a node byte array to an integer"""
     try:
         byte_string = node.replace(":", "").replace("-", "")
         byte_array = unhexlify(byte_string)
         return int.from_bytes(byte_array, byteorder="big", signed=False)
-    except Exception as exc:
+    except ValueError as exc:
         raise ValueError(f"node: {exc} ({node})") from exc
 
 
-def clock_seq_to_int(clock_seq: str):
+def clock_seq_to_int(clock_seq: str) -> int:
     """Convert a string representation of a clock_seq to an integer."""
     try:
         return int(clock_seq)
-    except Exception as exc:
+    except ValueError as exc:
         raise ValueError(f"clock_seq: {exc} ({clock_seq})") from exc
 
 
-def namespace_hex(value, uuid_version):
-    """Return hex string from input value
-    """
+def namespace_hex(value: str, uuid_version: int) -> str | None:
+    """Return hex string from input value"""
     hex_value = None
-    if uuid_version == 3:
+    if uuid_version == 3:  # noqa: PLR2004
         hex_value = md5(value.encode(), usedforsecurity=False).hexdigest()
-    elif uuid_version == 5:
+    elif uuid_version == 5:  # noqa: PLR2004
         hex_value = sha1(value.encode(), usedforsecurity=False).hexdigest()[:32]
     return hex_value
 
 
 def get_namespace_uuid(
-    namespace_as_uuid=None,
-    namespace=None,
-    uuid_version=None,
-):
-    """Returns namespace UUID"""
+    namespace_as_uuid: bool | None,
+    namespace: str | None,
+    uuid_version: int | None,
+) -> uuid.UUID | None:
+    """Return namespace UUID"""
     namespace_uuid = None
 
     if namespace == "namespace_url":
