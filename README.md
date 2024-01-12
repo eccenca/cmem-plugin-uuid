@@ -2,7 +2,7 @@
 
 Create universally unique identifiers (UUIDs) versions 1, 3, 4, 5, 6, 7 and 8 in transformations.
 
-[![eccenca Corporate Memory](https://img.shields.io/badge/eccenca-Corporate%20Memory-orange)](https://documentation.eccenca.com)   
+[![eccenca Corporate Memory](https://img.shields.io/badge/eccenca-Corporate%20Memory-orange)](https://documentation.eccenca.com) [![workflow](https://github.com/eccenca/cmem-plugin-uuid/actions/workflows/check.yml/badge.svg)](https://github.com/eccenca/cmem-plugin-uuid/actions) [![pypi version](https://img.shields.io/pypi/v/cmem-plugin-uuid)](https://pypi.org/project/uuid) [![license](https://img.shields.io/pypi/l/cmem-plugin-uuid)](https://pypi.org/project/cmem-plugin-uuid)
 
 ## UUID1
 
