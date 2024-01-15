@@ -23,8 +23,8 @@ from cmem_plugin_uuid.transform import (
 def test_uuid1_without_input() -> None:
     """Test UUID1 without input"""
     result = UUID1(
-        node=None,
-        clock_seq=None,
+        node="",
+        clock_seq="",
     ).transform(inputs=[])
     assert len(result) == 1
     for item in result:
@@ -35,8 +35,8 @@ def test_uuid1_with_value_input() -> None:
     """Test UUID1 with value input"""
     input_values = [["input1"], ["input2"]]
     result = UUID1(
-        node=None,
-        clock_seq=None,
+        node="",
+        clock_seq="",
     ).transform(inputs=input_values)
     assert len(result) == 2  # noqa: PLR2004
     for item in result:
@@ -325,8 +325,8 @@ def test_uuid5_with_empty_namespace() -> None:
 def test_uuid6_without_input() -> None:
     """Test UUID6 without input"""
     result = UUID6(
-        node=None,
-        clock_seq=None,
+        node="",
+        clock_seq="",
     ).transform(inputs=[])
     assert len(result) == 1
     for item in result:
@@ -337,8 +337,8 @@ def test_uuid6_with_value_input() -> None:
     """Test UUID6 with value input"""
     input_values = [["input1"], ["input2"]]
     result = UUID6(
-        node=None,
-        clock_seq=None,
+        node="",
+        clock_seq="",
     ).transform(inputs=input_values)
     assert len(result) == 2  # noqa: PLR2004
     for item in result:

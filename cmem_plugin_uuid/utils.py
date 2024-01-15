@@ -79,8 +79,8 @@ def namespace_hex(value: str, uuid_version: int) -> str | None:
 
 def get_namespace_uuid(
     namespace_as_uuid: bool | None,
-    namespace: str | None,
-    uuid_version: int | None,
+    namespace: str,
+    uuid_version: int,
 ) -> uuid.UUID | None:
     """Return namespace UUID"""
     namespace_uuid = None

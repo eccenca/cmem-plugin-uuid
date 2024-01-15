@@ -55,8 +55,8 @@ class UUID1(TransformPlugin):
 
     def __init__(
         self,
-        node: str | None,
-        clock_seq: str | None,
+        node: str,
+        clock_seq: str,
     ):
         self.node = node_to_int(node) if node else None
         self.clock_seq = clock_seq_to_int(clock_seq) if clock_seq else None
@@ -107,7 +107,7 @@ class UUID3(TransformPlugin):
 
     def __init__(
         self,
-        namespace: str | None,
+        namespace: str,
         namespace_as_uuid: bool | None,
     ):
         self.namespace = namespace
@@ -128,7 +128,7 @@ class UUID3(TransformPlugin):
                     if self.namespace == "empty_value":
                         result += [str(uuid.UUID(hex=namespace_hex(_, 3), version=3))]
                     else:
-                        result += [str(uuid.uuid3(namespace_uuid, _))]
+                        result += [str(uuid.uuid3(namespace_uuid, _))]  # type: ignore[arg-type]
         else:
             raise OSError("No input for UUID3")
         return result
@@ -187,7 +187,7 @@ class UUID5(TransformPlugin):
 
     def __init__(
         self,
-        namespace: str | None,
+        namespace: str,
         namespace_as_uuid: bool | None,
     ):
         self.namespace = namespace
@@ -208,7 +208,7 @@ class UUID5(TransformPlugin):
                     if self.namespace == "empty_value":
                         result += [str(uuid.UUID(hex=namespace_hex(_, 5), version=5))]
                     else:
-                        result += [str(uuid.uuid5(namespace_uuid, _))]
+                        result += [str(uuid.uuid5(namespace_uuid, _))]  # type: ignore[arg-type]
         else:
             raise OSError("No input for UUID5")
         return result
@@ -235,7 +235,7 @@ not involve legacy UUIDv1 SHOULD consider using UUIDv7 instead.
                 'Node value in the form "01:23:45:67:89:AB", 01-23-45-67-89-AB", or '
                 '"0123456789AB". If not given, a random 48-bit number is chosen.'
             ),
-            default_value=None,
+            default_value="",
         ),
         PluginParameter(
             name="clock_seq",
@@ -244,7 +244,7 @@ not involve legacy UUIDv1 SHOULD consider using UUIDv7 instead.
                 "If clock sequence is given, it is used as the sequence number. "
                 "Otherwise a random 14-bit number is chosen."
             ),
-            default_value=None,
+            default_value="",
         ),
     ],
 )
@@ -253,8 +253,8 @@ class UUID6(TransformPlugin):
 
     def __init__(
         self,
-        node: str | None,
-        clock_seq: str | None,
+        node: str,
+        clock_seq: str,
     ):
         self.node = node_to_int(node) if node else None
         self.clock_seq = clock_seq_to_int(clock_seq) if clock_seq else None
