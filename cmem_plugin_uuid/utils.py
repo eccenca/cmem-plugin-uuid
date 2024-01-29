@@ -14,7 +14,7 @@ uuid3_uuid5_namespace_param = ChoiceParameterType(
             "namespace_dns": "Namespace DNS",
             "namespace_oid": "Namespace OID",
             "namespace_x500": "Namespace X500",
-            "empty_value": "Empty value",
+            "": "",
         }
     ),
 )
@@ -93,7 +93,7 @@ def get_namespace_uuid(
         namespace_uuid = uuid.NAMESPACE_OID
     elif namespace == "namespace_x500":
         namespace_uuid = uuid.NAMESPACE_X500
-    elif namespace != "empty_value":
+    elif namespace.strip():
         if namespace_as_uuid:
             namespace_uuid = uuid.UUID(namespace)
         else:

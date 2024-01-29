@@ -86,7 +86,7 @@ class UUID1(TransformPlugin):
             name="namespace",
             label="Namespace",
             description="The namespace.",
-            default_value="empty_value",
+            default_value="",
         ),
         PluginParameter(
             param_type=BoolParameterType(),
@@ -125,7 +125,7 @@ class UUID3(TransformPlugin):
         if len(inputs) != 0:
             for collection in inputs:
                 for _ in collection:
-                    if self.namespace == "empty_value":
+                    if not self.namespace.strip():
                         result += [str(uuid.UUID(hex=namespace_hex(_, 3), version=3))]
                     else:
                         result += [str(uuid.uuid3(namespace_uuid, _))]  # type: ignore[arg-type]
@@ -166,7 +166,7 @@ class UUID4(TransformPlugin):
             name="namespace",
             label="Namespace",
             description="If 'namespace' is not given, the input string is used.",
-            default_value="empty_value",
+            default_value="",
         ),
         PluginParameter(
             param_type=BoolParameterType(),
@@ -205,7 +205,7 @@ class UUID5(TransformPlugin):
         if len(inputs) != 0:
             for collection in inputs:
                 for _ in collection:
-                    if self.namespace == "empty_value":
+                    if not self.namespace.strip():
                         result += [str(uuid.UUID(hex=namespace_hex(_, 5), version=5))]
                     else:
                         result += [str(uuid.uuid5(namespace_uuid, _))]  # type: ignore[arg-type]
