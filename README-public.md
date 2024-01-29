@@ -2,11 +2,7 @@
 
 Create universally unique identifiers (UUIDs) versions 1, 3, 4, 5, 6, 7 and 8 in transformations.
 
-## Installation
-
-```
-cmemc admin workspace python install cmem-plugin-uuid
-```
+[![eccenca Corporate Memory](https://img.shields.io/badge/eccenca-Corporate%20Memory-orange)](https://documentation.eccenca.com) [![workflow](https://github.com/eccenca/cmem-plugin-uuid/actions/workflows/check.yml/badge.svg)](https://github.com/eccenca/cmem-plugin-uuid/actions) [![pypi version](https://img.shields.io/pypi/v/cmem-plugin-uuid)](https://pypi.org/project/uuid) [![license](https://img.shields.io/pypi/l/cmem-plugin-uuid)](https://pypi.org/project/cmem-plugin-uuid)
 
 ## UUID1
 
@@ -42,24 +38,29 @@ UUID version 3 is a reproducible UUID based on the MD5 hash of a namespace ident
 
 #### Namespace
 
-The namespace UUID can be selected from the namespace UUIDs defined in
+The namespace can be entered manually or selected from the namespace UUIDs defined in
 [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122):
 
 - Namespace DNS: 6ba7b810-9dad-11d1-80b4-00c04fd430c8 (*namespace_dns*)
 - Namespace URL: 6ba7b811-9dad-11d1-80b4-00c04fd430c8 (*namespace_url*)
 - Namespace OID: 6ba7b812-9dad-11d1-80b4-00c04fd430c8 (*namespace_oid*)
 - Namespace X500: 6ba7b814-9dad-11d1-80b4-00c04fd430c8 (*namespace_x500*)
-- Empty value: only the name value is used (*empty_value*)
 
 If none of the predefined namespace UUIDs is selected, the input namespace is either directly
-interpreted as a UUID, or used to derive a UUID (see parameter _Namespace as UUID_). When selecting _Empty Value_ for
-the namespace, the output is the same as that of the standard CMEM UUID operator with input value.
+interpreted as a UUID, or used to derive a UUID (see parameter _Namespace as UUID_). If no namespace is given,
+the output is the same as that of the standard CMEM UUID operator with input value.
 
 
 
-Default value: _Empty value_  
+Default value: _none_  
 ID: `namespace`
 
+#### Use input as namespace
+
+If enabled, the input value is used for the namespace.
+
+Default value: _False_  
+ID: `input_as_namespace`
 
 #### Namespace as UUID
 
@@ -89,21 +90,18 @@ name (which is a string).
 
 #### Namespace
 
-The namespace UUID can be selected from the namespace UUIDs defined in
+The namespace can be entered manually or selected from the namespace UUIDs defined in
 [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122):
 
 - Namespace DNS: 6ba7b810-9dad-11d1-80b4-00c04fd430c8 (*namespace_dns*)
 - Namespace URL: 6ba7b811-9dad-11d1-80b4-00c04fd430c8 (*namespace_url*)
 - Namespace OID: 6ba7b812-9dad-11d1-80b4-00c04fd430c8 (*namespace_oid*)
 - Namespace X500: 6ba7b814-9dad-11d1-80b4-00c04fd430c8 (*namespace_x500*)
-- Empty value: only the name value is used (*empty_value*)
 
 If none of the predefined namespace UUIDs is selected, the input namespace is either directly
 interpreted as a UUID, or used to derive a UUID (see parameter _Namespace as UUID_).
 
-If the parameter is empty, the input is used.
-
-Default value: _Empty value_  
+Default value: _none_  
 ID: `namespace`
 
 
@@ -178,7 +176,7 @@ Outputs the UUID version from a UUID input string.
 ## UUID Convert
 
 Convert a UUID from one format to another. The plugin accepts strings in the correct format, however, the log will show
-a warning if it does not comply with the standard specified in [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122) and the 
+a warning if the input does not comply with the standard specified in [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122) and the 
 [proposed updates](https://www.ietf.org/archive/id/draft-peabody-dispatch-new-uuid-format-01.html).
 
 ### Parameters
@@ -202,8 +200,6 @@ Options:
 Default value: _UUID/32-character lowercase hexadecimal string_   
 ID: `from_format`
 
-  The UUID as a 16-byte string (containing the six integer fields in big-endian byte order).
-- **16-byte string (little-endian)** (_bytes_le_)
 
 #### To
 
