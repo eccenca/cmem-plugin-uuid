@@ -38,22 +38,21 @@ UUID version 3 is a reproducible UUID based on the MD5 hash of a namespace ident
 
 #### Namespace
 
-The namespace UUID can be selected from the namespace UUIDs defined in
+The namespace can be entered manually or selected from the namespace UUIDs defined in
 [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122):
 
 - Namespace DNS: 6ba7b810-9dad-11d1-80b4-00c04fd430c8 (*namespace_dns*)
 - Namespace URL: 6ba7b811-9dad-11d1-80b4-00c04fd430c8 (*namespace_url*)
 - Namespace OID: 6ba7b812-9dad-11d1-80b4-00c04fd430c8 (*namespace_oid*)
 - Namespace X500: 6ba7b814-9dad-11d1-80b4-00c04fd430c8 (*namespace_x500*)
-- Empty value: only the name value is used (*empty_value*)
 
 If none of the predefined namespace UUIDs is selected, the input namespace is either directly
-interpreted as a UUID, or used to derive a UUID (see parameter _Namespace as UUID_). When selecting _Empty Value_ for
-the namespace, the output is the same as that of the standard CMEM UUID operator with input value.
+interpreted as a UUID, or used to derive a UUID (see parameter _Namespace as UUID_). If no namespace is given,
+the output is the same as that of the standard CMEM UUID operator with input value.
 
 
 
-Default value: _Empty value_  
+Default value: _none_  
 ID: `namespace`
 
 #### Use input as namespace
@@ -91,21 +90,18 @@ name (which is a string).
 
 #### Namespace
 
-The namespace UUID can be selected from the namespace UUIDs defined in
+The namespace can be entered manually or selected from the namespace UUIDs defined in
 [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122):
 
 - Namespace DNS: 6ba7b810-9dad-11d1-80b4-00c04fd430c8 (*namespace_dns*)
 - Namespace URL: 6ba7b811-9dad-11d1-80b4-00c04fd430c8 (*namespace_url*)
 - Namespace OID: 6ba7b812-9dad-11d1-80b4-00c04fd430c8 (*namespace_oid*)
 - Namespace X500: 6ba7b814-9dad-11d1-80b4-00c04fd430c8 (*namespace_x500*)
-- Empty value: only the name value is used (*empty_value*)
 
 If none of the predefined namespace UUIDs is selected, the input namespace is either directly
 interpreted as a UUID, or used to derive a UUID (see parameter _Namespace as UUID_).
 
-If the parameter is empty, the input is used.
-
-Default value: _Empty value_  
+Default value: _none_  
 ID: `namespace`
 
 

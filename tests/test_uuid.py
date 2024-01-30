@@ -161,10 +161,10 @@ def test_uuid3_with_namespace_x500() -> None:
 
 
 def test_uuid3_with_empty_namespace() -> None:
-    """Test UUID3 with empty"""
+    """Test UUID3 with empty namespace"""
     input_values = [["input1"]]
     result = UUID3(
-        namespace="empty_value",
+        namespace="",
         namespace_as_uuid=False,
     ).transform(inputs=input_values)
     assert len(result) == 1
@@ -305,7 +305,7 @@ def test_uuid5_with_empty_namespace() -> None:
     """Test UUID5 with empty namespace"""
     input_values = [["input1"]]
     result = UUID5(
-        namespace="empty_value",
+        namespace="",
         namespace_as_uuid=False,
     ).transform(inputs=input_values)
     assert len(result) == 1
