@@ -1,4 +1,4 @@
-"""UUID6 transform plugin module"""
+"""UUID transform plugin module"""
 import re
 import uuid
 from collections.abc import Sequence
@@ -70,7 +70,7 @@ class UUID1(TransformPlugin):
                     str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq)) for _ in collection
                 ]
         else:
-            result += [str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq))]
+            result = [str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq))]
         return result
 
 
@@ -130,7 +130,7 @@ class UUID3(TransformPlugin):
                     else:
                         result += [str(uuid.uuid3(namespace_uuid, _))]  # type: ignore[arg-type]
         else:
-            raise OSError("No input for UUID3")
+            raise ValueError("No input for UUID3")
         return result
 
 
@@ -150,7 +150,7 @@ class UUID4(TransformPlugin):
             for collection in inputs:
                 result += [str(uuid.uuid4()) for _ in collection]
         else:
-            result += [str(uuid.uuid4())]
+            result = [str(uuid.uuid4())]
         return result
 
 
@@ -210,7 +210,7 @@ class UUID5(TransformPlugin):
                     else:
                         result += [str(uuid.uuid5(namespace_uuid, _))]  # type: ignore[arg-type]
         else:
-            raise OSError("No input for UUID5")
+            raise ValueError("No input for UUID5")
         return result
 
 
@@ -268,7 +268,7 @@ class UUID6(TransformPlugin):
                     str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq)) for _ in collection
                 ]
         else:
-            result += [str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))]
+            result = [str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))]
         return result
 
 
@@ -297,7 +297,7 @@ class UUID1ToUUID6(TransformPlugin):
                     except ValueError as exc:
                         raise ValueError(f"{_}  is not a valid UUIDv1 string") from exc
         else:
-            raise OSError("No input for UUID1 to UUID6")
+            raise ValueError("No input for UUID1 to UUID6")
         return result
 
 
@@ -324,7 +324,7 @@ class UUID7(TransformPlugin):
             for collection in inputs:
                 result += [str(uuid6.uuid7()) for _ in collection]
         else:
-            result += [str(uuid6.uuid7())]
+            result = [str(uuid6.uuid7())]
         return result
 
 
@@ -348,7 +348,7 @@ class UUID8(TransformPlugin):
             for collection in inputs:
                 result += [str(uuid6.uuid8()) for _ in collection]
         else:
-            result += [str(uuid6.uuid8())]
+            result = [str(uuid6.uuid8())]
         return result
 
 
@@ -440,7 +440,7 @@ class UUIDConvert(TransformPlugin):
             for collection in inputs:
                 result += [self.convert_uuid(_) for _ in collection]
         else:
-            raise OSError("No input for UUID Convert")
+            raise ValueError("No input for UUID Convert")
         return result
 
 
@@ -460,5 +460,5 @@ class UUIDVersion(TransformPlugin):
             for collection in inputs:
                 result += [str(uuid.UUID(_).version) for _ in collection]
         else:
-            raise OSError("No input for UUID Version")
+            raise ValueError("No input for UUID Version")
         return result
