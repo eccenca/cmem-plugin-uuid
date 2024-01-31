@@ -295,7 +295,7 @@ class UUID1ToUUID6(TransformPlugin):
                     try:
                         result += [str(uuid6.uuid1_to_uuid6(uuid.UUID(_)))]
                     except ValueError as exc:
-                        raise ValueError(f"{_}  is not a valid UUIDv1 string") from exc
+                        raise ValueError(f"{_} is not a valid UUIDv1 string") from exc
         else:
             raise ValueError("No input for UUID1 to UUID6")
         return result

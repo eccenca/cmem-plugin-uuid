@@ -2,7 +2,9 @@
 
 Create universally unique identifiers (UUIDs) versions 1, 3, 4, 5, 6, 7 and 8 in transformations.
 
-[![eccenca Corporate Memory](https://img.shields.io/badge/eccenca-Corporate%20Memory-orange)](https://documentation.eccenca.com) [![workflow](https://github.com/eccenca/cmem-plugin-uuid/actions/workflows/check.yml/badge.svg)](https://github.com/eccenca/cmem-plugin-uuid/actions) [![pypi version](https://img.shields.io/pypi/v/cmem-plugin-uuid)](https://pypi.org/project/uuid) [![license](https://img.shields.io/pypi/l/cmem-plugin-uuid)](https://pypi.org/project/cmem-plugin-uuid)
+## Installation
+
+`cmemc -c my-cmem admin workspace python install cmem-plugin-uuid`
 
 ## UUID1
 
@@ -49,8 +51,6 @@ The namespace can be entered manually or selected from the namespace UUIDs defin
 If none of the predefined namespace UUIDs is selected, the input namespace is either directly
 interpreted as a UUID, or used to derive a UUID (see parameter _Namespace as UUID_). If no namespace is given,
 the output is the same as that of the standard CMEM UUID operator with input value.
-
-
 
 Default value: _none_  
 ID: `namespace`
@@ -103,8 +103,6 @@ interpreted as a UUID, or used to derive a UUID (see parameter _Namespace as UUI
 
 Default value: _none_  
 ID: `namespace`
-
-
 
 #### Namespace as UUID
 
@@ -199,7 +197,6 @@ Options:
 
 Default value: _UUID/32-character lowercase hexadecimal string_   
 ID: `from_format`
-
 
 #### To
 
