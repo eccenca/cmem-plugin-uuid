@@ -84,7 +84,7 @@ ID: `namespace_as_uuid`
 
 ## UUID4
 
-UUID version 4 specifies a random UUID. The output is the same as that of the standard CMEM UUID operator without input value.
+UUID version 4 specifies a random UUID. This plugin is equivalent to the standard CMEM UUID operator without input value.
 
 <br>
 
