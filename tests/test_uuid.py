@@ -1,4 +1,5 @@
 """Plugin tests."""
+
 import uuid
 from hashlib import md5, sha1
 
