@@ -1,4 +1,5 @@
 """UUID transform plugin module"""
+
 import re
 import uuid
 from collections.abc import Sequence
@@ -396,7 +397,7 @@ class UUIDConvert(TransformPlugin):
                 f"the proposed updates"
             )
 
-    def convert_uuid(self, uuid_string: str) -> str:  # noqa: PLR0912 C901
+    def convert_uuid(self, uuid_string: str) -> str:  # noqa: C901
         """Convert UUID string"""
         if self.from_ == "uuid_hex":
             try:
