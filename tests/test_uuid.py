@@ -5,7 +5,7 @@ from hashlib import md5, sha1
 
 import uuid6
 
-from cmem_plugin_uuid.transform import (
+from cmem_plugin_uuid.plugin_uuid import (
     UUID1,
     UUID3,
     UUID4,
