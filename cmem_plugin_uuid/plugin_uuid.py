@@ -383,7 +383,7 @@ class UUID8(TransformPlugin):
 class UUIDConvert(TransformPlugin):
     """Converts UUID representation"""
 
-    def __init__(self, from_format: str | None, to_format: str | None) -> None:
+    def __init__(self, from_format: str = "uuid_hex", to_format: str = "hex") -> None:
         self.from_ = from_format
         self.to_ = to_format
 
