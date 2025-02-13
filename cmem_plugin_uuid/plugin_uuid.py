@@ -385,7 +385,7 @@ class UUIDConvert(TransformPlugin):
 
     def __init__(self, from_format: str = "uuid_hex", to_format: str = "hex") -> None:
         self.from_ = from_format
-        self.to_ = to_format
+        self.to = to_format
 
     def uuid_validate(self, test_uuid: uuid.UUID, uuid_string: str) -> None:
         """Warning if UUID string not standard (versions 1 to 8)"""
@@ -424,14 +424,16 @@ class UUIDConvert(TransformPlugin):
 
         self.uuid_validate(in_uuid, uuid_string)
 
-        if self.to_ == "uuid":
-            result = str(in_uuid)
-        if self.to_ == "hex":
-            result = str(in_uuid.hex)
-        elif self.to_ == "int":
-            result = str(in_uuid.int)
-        elif self.to_ == "urn":
-            result = str(in_uuid.urn)
+        match self.to:
+            case "uuid":
+                result = str(in_uuid)
+            case "hex":
+                result = str(in_uuid.hex)
+            case "int":
+                result = str(in_uuid.int)
+            case "urn":
+                result = str(in_uuid.urn)
+
         return result
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
