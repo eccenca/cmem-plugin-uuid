@@ -23,7 +23,7 @@ from cmem_plugin_uuid.utils import (
 @Plugin(
     label="UUID1",
     categories=["Value", "Identifier"],
-    description="Generate a UUIDv1 from a host ID, sequence number, and the " "current time",
+    description="Generate a UUIDv1 from a host ID, sequence number, and the current time",
     documentation="""
 UUIDv1 is generated from a host ID, sequence number, and the current
 time.
@@ -218,7 +218,7 @@ class UUID5(TransformPlugin):
 @Plugin(
     label="UUID6",
     categories=["Value", "Identifier"],
-    description="Generate a UUIDv6 from a host ID, sequence number, and the " "current time",
+    description="Generate a UUIDv6 from a host ID, sequence number, and the current time",
     documentation="""
 UUIDv6 is generated from a host ID, sequence number, and the current
 time.
