@@ -9,7 +9,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 
-- update template to 7.1.0
+- Update template to 7.1.0
+- Output empty value instead of throwing an error for plugins that need an input value if no input is given 
 
 
 ## [1.0.0] 2024-02-12

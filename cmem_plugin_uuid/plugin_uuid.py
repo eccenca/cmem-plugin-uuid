@@ -130,8 +130,6 @@ class UUID3(TransformPlugin):
                         result += [str(uuid.UUID(hex=namespace_hex(_, 3), version=3))]
                     else:
                         result += [str(uuid.uuid3(namespace_uuid, _))]  # type: ignore[arg-type]
-        else:
-            raise ValueError("No input for UUID3")
         return result
 
 
@@ -210,8 +208,6 @@ class UUID5(TransformPlugin):
                         result += [str(uuid.UUID(hex=namespace_hex(_, 5), version=5))]
                     else:
                         result += [str(uuid.uuid5(namespace_uuid, _))]  # type: ignore[arg-type]
-        else:
-            raise ValueError("No input for UUID5")
         return result
 
 
@@ -297,8 +293,6 @@ class UUID1ToUUID6(TransformPlugin):
                         result += [str(uuid6.uuid1_to_uuid6(uuid.UUID(_)))]
                     except ValueError as exc:
                         raise ValueError(f"{_} is not a valid UUIDv1 string") from exc
-        else:
-            raise ValueError("No input for UUID1 to UUID6")
         return result
 
 
@@ -387,42 +381,39 @@ class UUIDConvert(TransformPlugin):
         self.from_ = from_format
         self.to = to_format
 
-    def uuid_validate(self, test_uuid: uuid.UUID, uuid_string: str) -> None:
-        """Warning if UUID string not standard (versions 1 to 8)"""
-        pattern = r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        self.uuid_pattern = (
+            r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        )
+        self.urn_pattern = (
+            r"^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        )
 
-        if not re.match(pattern, str(test_uuid)):
+    def convert_uuid(self, uuid_string: str) -> str:  # noqa: C901
+        """Convert UUID string"""
+        match self.from_:
+            case "uuid_hex":
+                try:
+                    in_uuid = uuid.UUID(uuid_string)
+                except ValueError as exc:
+                    raise ValueError(f"{uuid_string} is not a valid 32-bit UUID string") from exc
+            case "int":
+                try:
+                    in_uuid = uuid.UUID(int=int(uuid_string))
+                except ValueError as exc:
+                    raise ValueError(
+                        f"{uuid_string} is not a valid 128-bit integer UUID value"
+                    ) from exc
+            case "urn":
+                uuid_string = uuid_string.lower()
+                if not re.match(self.urn_pattern, uuid_string):
+                    raise ValueError(f"{uuid_string} is not a valid UUID URN")
+                in_uuid = uuid.UUID(uuid_string)
+
+        if not re.match(self.uuid_pattern, str(in_uuid)):
             self.log.warning(
                 f"{uuid_string} is not a valid UUID as specified in RFC 4122 and "
                 f"the proposed updates"
             )
-
-    def convert_uuid(self, uuid_string: str) -> str:  # noqa: C901
-        """Convert UUID string"""
-        if self.from_ == "uuid_hex":
-            try:
-                in_uuid = uuid.UUID(uuid_string)
-            except ValueError as exc:
-                raise ValueError(f"{uuid_string} is not a valid 32-bit UUID string") from exc
-
-        elif self.from_ == "int":
-            try:
-                in_uuid = uuid.UUID(int=int(uuid_string))
-            except ValueError as exc:
-                raise ValueError(
-                    f"{uuid_string} is not a valid 128-bit integer UUID value"
-                ) from exc
-
-        elif self.from_ == "urn":
-            if not uuid_string.lower().startswith("urn:uuid:"):
-                raise ValueError(f"{uuid_string} is not a valid UUID URN")
-
-            try:
-                in_uuid = uuid.UUID(uuid_string[9:])
-            except ValueError as exc:
-                raise ValueError(f"{uuid_string} is not a valid UUID URN") from exc
-
-        self.uuid_validate(in_uuid, uuid_string)
 
         match self.to:
             case "uuid":
@@ -442,8 +433,6 @@ class UUIDConvert(TransformPlugin):
         if len(inputs) != 0:
             for collection in inputs:
                 result += [self.convert_uuid(_) for _ in collection]
-        else:
-            raise ValueError("No input for UUID Convert")
         return result
 
 
@@ -462,6 +451,4 @@ class UUIDVersion(TransformPlugin):
         if len(inputs) != 0:
             for collection in inputs:
                 result += [str(uuid.UUID(_).version) for _ in collection]
-        else:
-            raise ValueError("No input for UUID Version")
         return result
