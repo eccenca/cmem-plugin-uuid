@@ -1,1 +1,1 @@
-"""uuid - main package"""
+"""cmem-plugin-uuid"""
