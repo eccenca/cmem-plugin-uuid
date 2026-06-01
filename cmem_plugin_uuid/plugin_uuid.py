@@ -28,8 +28,8 @@ def uuid8(a: int | None = None, b: int | None = None, c: int | None = None) -> u
     """Generate a UUIDv8 from three custom blocks (RFC 9562 §5.8).
 
     Backport of ``uuid.uuid8`` from the Python 3.14 standard library. Once this
-    project moves to Python 3.14 (when cmem switches), this function is
-    obsolete and callers should use ``uuid.uuid8`` from the stdlib directly.
+    project moves to Python 3.14, this function is obsolete and ``uuid.uuid8``
+    from the stdlib will be used directly.
 
     * ``a`` is the first 48-bit chunk of the UUID (octets 0-5);
     * ``b`` is the mid 12-bit chunk (octets 6-7);
