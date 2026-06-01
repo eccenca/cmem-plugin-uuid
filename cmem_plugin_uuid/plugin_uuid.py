@@ -10,14 +10,25 @@ from cmem_plugin_base.dataintegration.plugins import TransformPlugin
 from cmem_plugin_base.dataintegration.types import BoolParameterType
 
 from cmem_plugin_uuid.utils import (
+    UUID_V3,
+    UUID_V5,
     clock_seq_to_int,
     get_namespace_uuid,
     namespace_hex,
     node_to_int,
+    parse_uuid8_field,
+    repeat_for_inputs,
     uuid3_uuid5_namespace_param,
     uuid8,
     uuid_convert_param_in,
     uuid_convert_param_out,
+)
+
+_UUID_PATTERN = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+)
+_URN_PATTERN = re.compile(
+    r"^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
 )
 
 
@@ -65,15 +76,9 @@ class UUID1(TransformPlugin):
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [
-                    str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq)) for _ in collection
-                ]
-        else:
-            result = [str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq))]
-        return result
+        return repeat_for_inputs(
+            inputs, lambda: str(uuid.uuid1(node=self.node, clock_seq=self.clock_seq))
+        )
 
 
 @Plugin(
@@ -117,20 +122,21 @@ class UUID3(TransformPlugin):
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
-        result = []
         namespace_uuid = get_namespace_uuid(
             namespace_as_uuid=self.namespace_as_uuid,
             namespace=self.namespace,
-            uuid_version=3,
+            uuid_version=UUID_V3,
         )
-
-        if len(inputs) != 0:
+        result = []
+        if inputs:
             for collection in inputs:
-                for _ in collection:
+                for value in collection:
                     if not self.namespace.strip():
-                        result += [str(uuid.UUID(hex=namespace_hex(_, 3), version=3))]
+                        result += [
+                            str(uuid.UUID(hex=namespace_hex(value, UUID_V3), version=UUID_V3))
+                        ]
                     else:
-                        result += [str(uuid.uuid3(namespace_uuid, _))]  # type: ignore[arg-type]
+                        result += [str(uuid.uuid3(namespace_uuid, value))]  # type: ignore[arg-type]
         return result
 
 
@@ -145,13 +151,7 @@ class UUID4(TransformPlugin):
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [str(uuid.uuid4()) for _ in collection]
-        else:
-            result = [str(uuid.uuid4())]
-        return result
+        return repeat_for_inputs(inputs, lambda: str(uuid.uuid4()))
 
 
 @Plugin(
@@ -195,20 +195,21 @@ class UUID5(TransformPlugin):
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
-        result = []
         namespace_uuid = get_namespace_uuid(
             namespace_as_uuid=self.namespace_as_uuid,
             namespace=self.namespace,
-            uuid_version=5,
+            uuid_version=UUID_V5,
         )
-
-        if len(inputs) != 0:
+        result = []
+        if inputs:
             for collection in inputs:
-                for _ in collection:
+                for value in collection:
                     if not self.namespace.strip():
-                        result += [str(uuid.UUID(hex=namespace_hex(_, 5), version=5))]
+                        result += [
+                            str(uuid.UUID(hex=namespace_hex(value, UUID_V5), version=UUID_V5))
+                        ]
                     else:
-                        result += [str(uuid.uuid5(namespace_uuid, _))]  # type: ignore[arg-type]
+                        result += [str(uuid.uuid5(namespace_uuid, value))]  # type: ignore[arg-type]
         return result
 
 
@@ -259,15 +260,9 @@ class UUID6(TransformPlugin):
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [
-                    str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq)) for _ in collection
-                ]
-        else:
-            result = [str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))]
-        return result
+        return repeat_for_inputs(
+            inputs, lambda: str(uuid6.uuid6(node=self.node, clock_seq=self.clock_seq))
+        )
 
 
 @Plugin(
@@ -287,13 +282,13 @@ class UUID1ToUUID6(TransformPlugin):
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
         result = []
-        if len(inputs) != 0:
+        if inputs:
             for collection in inputs:
-                for _ in collection:
+                for value in collection:
                     try:
-                        result += [str(uuid6.uuid1_to_uuid6(uuid.UUID(_)))]
+                        result += [str(uuid6.uuid1_to_uuid6(uuid.UUID(value)))]
                     except ValueError as exc:
-                        raise ValueError(f"{_} is not a valid UUIDv1 string") from exc
+                        raise ValueError(f"{value} is not a valid UUIDv1 string") from exc
         return result
 
 
@@ -315,13 +310,7 @@ class UUID7(TransformPlugin):
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [str(uuid6.uuid7()) for _ in collection]
-        else:
-            result = [str(uuid6.uuid7())]
-        return result
+        return repeat_for_inputs(inputs, lambda: str(uuid6.uuid7()))
 
 
 @Plugin(
@@ -368,19 +357,13 @@ class UUID8(TransformPlugin):
     """UUID8 Transform Plugin"""
 
     def __init__(self, a: str = "", b: str = "", c: str = ""):
-        self.a = int(a) if a else None
-        self.b = int(b) if b else None
-        self.c = int(c) if c else None
+        self.a = parse_uuid8_field("a", a, 48) if a else None
+        self.b = parse_uuid8_field("b", b, 12) if b else None
+        self.c = parse_uuid8_field("c", c, 62) if c else None
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [str(uuid8(self.a, self.b, self.c)) for _ in collection]
-        else:
-            result = [str(uuid8(self.a, self.b, self.c))]
-        return result
+        return repeat_for_inputs(inputs, lambda: str(uuid8(self.a, self.b, self.c)))
 
 
 @Plugin(
@@ -417,59 +400,56 @@ class UUIDConvert(TransformPlugin):
         self.from_ = from_format
         self.to = to_format
 
-        self.uuid_pattern = (
-            r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
-        )
-        self.urn_pattern = (
-            r"^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
-        )
-
-    def convert_uuid(self, uuid_string: str) -> str:  # noqa: C901
-        """Convert UUID string"""
+    def _parse_input(self, uuid_string: str) -> uuid.UUID:
+        """Parse ``uuid_string`` according to ``self.from_``."""
         match self.from_:
             case "uuid_hex":
                 try:
-                    in_uuid = uuid.UUID(uuid_string)
+                    return uuid.UUID(uuid_string)
                 except ValueError as exc:
                     raise ValueError(f"{uuid_string} is not a valid 32-bit UUID string") from exc
             case "int":
                 try:
-                    in_uuid = uuid.UUID(int=int(uuid_string))
+                    return uuid.UUID(int=int(uuid_string))
                 except ValueError as exc:
                     raise ValueError(
                         f"{uuid_string} is not a valid 128-bit integer UUID value"
                     ) from exc
             case "urn":
-                uuid_string = uuid_string.lower()
-                if not re.match(self.urn_pattern, uuid_string):
+                normalized = uuid_string.lower()
+                if not _URN_PATTERN.match(normalized):
                     raise ValueError(f"{uuid_string} is not a valid UUID URN")
-                in_uuid = uuid.UUID(uuid_string)
+                return uuid.UUID(normalized)
+            case _:
+                raise ValueError(f"Unknown input format: {self.from_}")
 
-        if not re.match(self.uuid_pattern, str(in_uuid)):
+    def _format_output(self, in_uuid: uuid.UUID) -> str:
+        """Format ``in_uuid`` according to ``self.to``."""
+        match self.to:
+            case "uuid":
+                return str(in_uuid)
+            case "hex":
+                return str(in_uuid.hex)
+            case "int":
+                return str(in_uuid.int)
+            case "urn":
+                return str(in_uuid.urn)
+            case _:
+                raise ValueError(f"Unknown output format: {self.to}")
+
+    def convert_uuid(self, uuid_string: str) -> str:
+        """Convert UUID string"""
+        in_uuid = self._parse_input(uuid_string)
+        if not _UUID_PATTERN.match(str(in_uuid)):
             self.log.warning(
                 f"{uuid_string} is not a valid UUID as specified in RFC 4122 and "
                 f"the proposed updates"
             )
-
-        match self.to:
-            case "uuid":
-                result = str(in_uuid)
-            case "hex":
-                result = str(in_uuid.hex)
-            case "int":
-                result = str(in_uuid.int)
-            case "urn":
-                result = str(in_uuid.urn)
-
-        return result
+        return self._format_output(in_uuid)
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
-        """Trasnform"""
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [self.convert_uuid(_) for _ in collection]
-        return result
+        """Transform"""
+        return [self.convert_uuid(value) for collection in inputs for value in collection]
 
 
 @Plugin(
@@ -483,8 +463,4 @@ class UUIDVersion(TransformPlugin):
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
-        result = []
-        if len(inputs) != 0:
-            for collection in inputs:
-                result += [str(uuid.UUID(_).version) for _ in collection]
-        return result
+        return [str(uuid.UUID(value).version) for collection in inputs for value in collection]

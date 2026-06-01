@@ -4,9 +4,13 @@ import os
 import uuid
 from binascii import unhexlify
 from collections import OrderedDict
+from collections.abc import Callable, Sequence
 from hashlib import md5, sha1
 
 from cmem_plugin_base.dataintegration.parameter.choice import ChoiceParameterType
+
+UUID_V3 = 3
+UUID_V5 = 5
 
 uuid3_uuid5_namespace_param = ChoiceParameterType(
     OrderedDict(
@@ -70,12 +74,36 @@ def clock_seq_to_int(clock_seq: str) -> int:
 
 def namespace_hex(value: str, uuid_version: int) -> str | None:
     """Return hex string from input value"""
-    hex_value = None
-    if uuid_version == 3:  # noqa: PLR2004
-        hex_value = md5(value.encode(), usedforsecurity=False).hexdigest()
-    elif uuid_version == 5:  # noqa: PLR2004
-        hex_value = sha1(value.encode(), usedforsecurity=False).hexdigest()[:32]
-    return hex_value
+    if uuid_version == UUID_V3:
+        return md5(value.encode(), usedforsecurity=False).hexdigest()
+    if uuid_version == UUID_V5:
+        return sha1(value.encode(), usedforsecurity=False).hexdigest()[:32]
+    return None
+
+
+def parse_uuid8_field(name: str, value: str, bits: int) -> int:
+    """Parse and range-check a UUID8 custom data field.
+
+    Raises ValueError if the value is not a non-negative integer that fits in
+    ``bits`` bits.
+    """
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ValueError(f"{name}: not a valid integer ({value})") from exc
+    if not 0 <= parsed < (1 << bits):
+        raise ValueError(f"{name}: must be a {bits}-bit non-negative integer ({value})")
+    return parsed
+
+
+def repeat_for_inputs(
+    inputs: Sequence[Sequence[str]],
+    generator: Callable[[], str],
+) -> list[str]:
+    """Apply ``generator`` once per input item, or once total if no input is given."""
+    if not inputs:
+        return [generator()]
+    return [generator() for collection in inputs for _ in collection]
 
 
 def uuid8(a: int | None = None, b: int | None = None, c: int | None = None) -> uuid.UUID:
