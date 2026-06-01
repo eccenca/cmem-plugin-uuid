@@ -15,6 +15,7 @@ from cmem_plugin_uuid.utils import (
     namespace_hex,
     node_to_int,
     uuid3_uuid5_namespace_param,
+    uuid8,
     uuid_convert_param_in,
     uuid_convert_param_out,
 )
@@ -326,24 +327,59 @@ class UUID7(TransformPlugin):
 @Plugin(
     label="UUID8",
     categories=["Value", "Identifier"],
-    description="Generate a UUIDv8 from a random number, and the current time.",
-    documentation="""UUIDv8 features a time-ordered value field derived from the
-widely implemented and well known Unix Epoch timestamp source, the
-number of nanoseconds since midnight 1 Jan 1970 UTC, leap seconds
-excluded.
+    description="Generate a UUIDv8 from three custom data fields (RFC 9562 §5.8).",
+    documentation="""UUIDv8 is a free-form / experimental UUID format defined in
+RFC 9562 §5.8. The 122 bits available outside the version and variant fields
+are split into three custom data fields: 'a' (48 bits, octets 0-5), 'b' (12
+bits, octets 6-7), and 'c' (62 bits, octets 8-15). When a field is left
+empty, a random value is used.
 """,
+    parameters=[
+        PluginParameter(
+            name="a",
+            label="Custom data 'a' (default: random)",
+            description=(
+                "First 48-bit chunk of the UUID (octets 0-5) as a positive integer. "
+                "If not given, a random value is used."
+            ),
+            default_value="",
+        ),
+        PluginParameter(
+            name="b",
+            label="Custom data 'b' (default: random)",
+            description=(
+                "Middle 12-bit chunk of the UUID (octets 6-7) as a positive integer. "
+                "If not given, a random value is used."
+            ),
+            default_value="",
+        ),
+        PluginParameter(
+            name="c",
+            label="Custom data 'c' (default: random)",
+            description=(
+                "Last 62-bit chunk of the UUID (octets 8-15) as a positive integer. "
+                "If not given, a random value is used."
+            ),
+            default_value="",
+        ),
+    ],
 )
 class UUID8(TransformPlugin):
     """UUID8 Transform Plugin"""
+
+    def __init__(self, a: str = "", b: str = "", c: str = ""):
+        self.a = int(a) if a else None
+        self.b = int(b) if b else None
+        self.c = int(c) if c else None
 
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
         result = []
         if len(inputs) != 0:
             for collection in inputs:
-                result += [str(uuid6.uuid8()) for _ in collection]
+                result += [str(uuid8(self.a, self.b, self.c)) for _ in collection]
         else:
-            result = [str(uuid6.uuid8())]
+            result = [str(uuid8(self.a, self.b, self.c))]
         return result
 
 

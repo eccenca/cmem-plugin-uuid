@@ -1,5 +1,6 @@
 """Utilities for cmem-plugin-uuid"""
 
+import os
 import uuid
 from binascii import unhexlify
 from collections import OrderedDict
@@ -75,6 +76,31 @@ def namespace_hex(value: str, uuid_version: int) -> str | None:
     elif uuid_version == 5:  # noqa: PLR2004
         hex_value = sha1(value.encode(), usedforsecurity=False).hexdigest()[:32]
     return hex_value
+
+
+def uuid8(a: int | None = None, b: int | None = None, c: int | None = None) -> uuid.UUID:
+    """Generate a UUIDv8 from three custom blocks (RFC 9562 §5.8).
+
+    Backport of ``uuid.uuid8`` from the Python 3.14 standard library. Once this
+    project moves to Python 3.14 (when cmem switches), this function is
+    obsolete and callers should use ``uuid.uuid8`` from the stdlib directly.
+
+    * ``a`` is the first 48-bit chunk of the UUID (octets 0-5);
+    * ``b`` is the mid 12-bit chunk (octets 6-7);
+    * ``c`` is the last 62-bit chunk (octets 8-15).
+
+    When a value is not specified, a pseudo-random value is generated.
+    """
+    if a is None:
+        a = int.from_bytes(os.urandom(6))
+    if b is None:
+        b = int.from_bytes(os.urandom(2)) & 0xFFF
+    if c is None:
+        c = int.from_bytes(os.urandom(8)) & 0x3FFFFFFFFFFFFFFF
+    int_uuid_8 = (a & 0xFFFFFFFFFFFF) << 80
+    int_uuid_8 |= (b & 0xFFF) << 64
+    int_uuid_8 |= c & 0x3FFFFFFFFFFFFFFF
+    return uuid.UUID(int=int_uuid_8, version=8)
 
 
 def get_namespace_uuid(
