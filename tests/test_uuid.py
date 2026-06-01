@@ -16,8 +16,8 @@ from cmem_plugin_uuid.plugin_uuid import (
     UUID1ToUUID6,
     UUIDConvert,
     UUIDVersion,
+    uuid8,
 )
-from cmem_plugin_uuid.utils import uuid8
 
 # Test UUID1
 

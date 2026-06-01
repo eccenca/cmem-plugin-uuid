@@ -1,6 +1,5 @@
 """Utilities for cmem-plugin-uuid"""
 
-import os
 import uuid
 from binascii import unhexlify
 from collections import OrderedDict
@@ -81,21 +80,6 @@ def namespace_hex(value: str, uuid_version: int) -> str | None:
     return None
 
 
-def parse_uuid8_field(name: str, value: str, bits: int) -> int:
-    """Parse and range-check a UUID8 custom data field.
-
-    Raises ValueError if the value is not a non-negative integer that fits in
-    ``bits`` bits.
-    """
-    try:
-        parsed = int(value)
-    except ValueError as exc:
-        raise ValueError(f"{name}: not a valid integer ({value})") from exc
-    if not 0 <= parsed < (1 << bits):
-        raise ValueError(f"{name}: must be a {bits}-bit non-negative integer ({value})")
-    return parsed
-
-
 def repeat_for_inputs(
     inputs: Sequence[Sequence[str]],
     generator: Callable[[], str],
@@ -104,41 +88,6 @@ def repeat_for_inputs(
     if not inputs:
         return [generator()]
     return [generator() for collection in inputs for _ in collection]
-
-
-def uuid8(a: int | None = None, b: int | None = None, c: int | None = None) -> uuid.UUID:
-    """Generate a UUIDv8 from three custom blocks (RFC 9562 §5.8).
-
-    Backport of ``uuid.uuid8`` from the Python 3.14 standard library. Once this
-    project moves to Python 3.14 (when cmem switches), this function is
-    obsolete and callers should use ``uuid.uuid8`` from the stdlib directly.
-
-    * ``a`` is the first 48-bit chunk of the UUID (octets 0-5);
-    * ``b`` is the mid 12-bit chunk (octets 6-7);
-    * ``c`` is the last 62-bit chunk (octets 8-15).
-
-    When a value is not specified, a pseudo-random value is generated.
-
-    The version and variant bits are set manually rather than via
-    ``UUID(version=8)`` because Python's stdlib ``UUID`` constructor rejects
-    versions outside 1-5 prior to Python 3.14.
-    """
-    if a is None:
-        a = int.from_bytes(os.urandom(6))
-    if b is None:
-        b = int.from_bytes(os.urandom(2)) & 0xFFF
-    if c is None:
-        c = int.from_bytes(os.urandom(8)) & 0x3FFFFFFFFFFFFFFF
-    int_uuid_8 = (a & 0xFFFFFFFFFFFF) << 80
-    int_uuid_8 |= (b & 0xFFF) << 64
-    int_uuid_8 |= c & 0x3FFFFFFFFFFFFFFF
-    # Set variant to RFC 4122/9562 ('10' at bits 62-63).
-    int_uuid_8 &= ~(0xC000 << 48)
-    int_uuid_8 |= 0x8000 << 48
-    # Set version 8 (at bits 76-79).
-    int_uuid_8 &= ~(0xF000 << 64)
-    int_uuid_8 |= 8 << 76
-    return uuid.UUID(int=int_uuid_8)
 
 
 def get_namespace_uuid(
