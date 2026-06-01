@@ -90,6 +90,10 @@ def uuid8(a: int | None = None, b: int | None = None, c: int | None = None) -> u
     * ``c`` is the last 62-bit chunk (octets 8-15).
 
     When a value is not specified, a pseudo-random value is generated.
+
+    The version and variant bits are set manually rather than via
+    ``UUID(version=8)`` because Python's stdlib ``UUID`` constructor rejects
+    versions outside 1-5 prior to Python 3.14.
     """
     if a is None:
         a = int.from_bytes(os.urandom(6))
@@ -100,7 +104,13 @@ def uuid8(a: int | None = None, b: int | None = None, c: int | None = None) -> u
     int_uuid_8 = (a & 0xFFFFFFFFFFFF) << 80
     int_uuid_8 |= (b & 0xFFF) << 64
     int_uuid_8 |= c & 0x3FFFFFFFFFFFFFFF
-    return uuid.UUID(int=int_uuid_8, version=8)
+    # Set variant to RFC 4122/9562 ('10' at bits 62-63).
+    int_uuid_8 &= ~(0xC000 << 48)
+    int_uuid_8 |= 0x8000 << 48
+    # Set version 8 (at bits 76-79).
+    int_uuid_8 &= ~(0xF000 << 64)
+    int_uuid_8 |= 8 << 76
+    return uuid.UUID(int=int_uuid_8)
 
 
 def get_namespace_uuid(
