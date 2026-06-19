@@ -68,7 +68,7 @@ _URN_PATTERN = re.compile(
 
 
 @Plugin(
-    label="UUID1",
+    label="UUIDv1",
     categories=["Value", "Identifier"],
     description="Generate a UUIDv1 from a host ID, sequence number, and the current time",
     documentation="""
@@ -117,7 +117,7 @@ class UUID1(TransformPlugin):
 
 
 @Plugin(
-    label="UUID3",
+    label="UUIDv3",
     categories=["Value", "Identifier"],
     description="Generate a UUIDv3",
     documentation="""UUID3 is based on the MD5 hash of a namespace identifier (which
@@ -176,7 +176,7 @@ class UUID3(TransformPlugin):
 
 
 @Plugin(
-    label="UUID4",
+    label="UUIDv4",
     categories=["Value", "Identifier"],
     description="Generate a random UUIDv4.",
     documentation="""UUIDv4 specifies a random UUID.""",
@@ -190,7 +190,7 @@ class UUID4(TransformPlugin):
 
 
 @Plugin(
-    label="UUID5",
+    label="UUIDv5",
     categories=["Value", "Identifier"],
     description="Generate a UUIDv5",
     documentation="""UUID5 is based on the SHA1 hash of a namespace identifier (which
@@ -249,7 +249,7 @@ class UUID5(TransformPlugin):
 
 
 @Plugin(
-    label="UUID6",
+    label="UUIDv6",
     categories=["Value", "Identifier"],
     description="Generate a UUIDv6 from a host ID, sequence number, and the current time",
     documentation="""
@@ -301,7 +301,7 @@ class UUID6(TransformPlugin):
 
 
 @Plugin(
-    label="UUID1 to UUID6",
+    label="UUIDv1 to UUIDv6",
     categories=["Value", "Identifier"],
     description="Generate UUIDv6 from a UUIDv1.",
     documentation="""
@@ -328,7 +328,7 @@ class UUID1ToUUID6(TransformPlugin):
 
 
 @Plugin(
-    label="UUID7",
+    label="UUIDv7",
     categories=["Value", "Identifier"],
     description="Generate a UUIDv7 from a random number, and the current time.",
     documentation="""UUIDv7 features a time-ordered value field derived from the
@@ -349,7 +349,7 @@ class UUID7(TransformPlugin):
 
 
 @Plugin(
-    label="UUID8",
+    label="UUIDv8",
     categories=["Value", "Identifier"],
     description="Generate a UUIDv8 from three custom data fields (RFC 9562 §5.8).",
     documentation="""UUIDv8 is a free-form / experimental UUID format defined in
