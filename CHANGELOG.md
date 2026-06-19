@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Update template to 8.4.1
 - UUID8 plugin: three optional custom data fields `a` (48-bit), `b` (12-bit) and `c` (62-bit) per RFC 9562 §5.8. Missing fields are filled with random data.
+
+### Breaking Change
+
 - UUID8 output is no longer time-ordered. Use UUIDv7 if sortability by creation time is required.
 
 ## [2.0.0] 2025-10-16
