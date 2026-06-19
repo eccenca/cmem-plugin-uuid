@@ -4,18 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/)
 
-## [Unreleased]
+## [3.0.0b1] 2026-06-19
 
 ### Changed
 
 - Update template to 8.4.1
 - UUID8 plugin: three optional custom data fields `a` (48-bit), `b` (12-bit) and `c` (62-bit) per RFC 9562 §5.8. Missing fields are filled with random data.
-
-### Breaking Change
-
 - UUID8 output is no longer time-ordered. Use UUIDv7 if sortability by creation time is required.
 
-## [2.0.0] 2024-10-16
+## [2.0.0] 2025-10-16
 
 ### Changed
 
