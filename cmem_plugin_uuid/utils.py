@@ -3,9 +3,13 @@
 import uuid
 from binascii import unhexlify
 from collections import OrderedDict
+from collections.abc import Callable, Sequence
 from hashlib import md5, sha1
 
 from cmem_plugin_base.dataintegration.parameter.choice import ChoiceParameterType
+
+UUID_V3 = 3
+UUID_V5 = 5
 
 uuid3_uuid5_namespace_param = ChoiceParameterType(
     OrderedDict(
@@ -69,12 +73,21 @@ def clock_seq_to_int(clock_seq: str) -> int:
 
 def namespace_hex(value: str, uuid_version: int) -> str | None:
     """Return hex string from input value"""
-    hex_value = None
-    if uuid_version == 3:  # noqa: PLR2004
-        hex_value = md5(value.encode(), usedforsecurity=False).hexdigest()
-    elif uuid_version == 5:  # noqa: PLR2004
-        hex_value = sha1(value.encode(), usedforsecurity=False).hexdigest()[:32]
-    return hex_value
+    if uuid_version == UUID_V3:
+        return md5(value.encode(), usedforsecurity=False).hexdigest()
+    if uuid_version == UUID_V5:
+        return sha1(value.encode(), usedforsecurity=False).hexdigest()[:32]
+    return None
+
+
+def repeat_for_inputs(
+    inputs: Sequence[Sequence[str]],
+    generator: Callable[[], str],
+) -> list[str]:
+    """Apply ``generator`` once per input item, or once total if no input is given."""
+    if not inputs:
+        return [generator()]
+    return [generator() for collection in inputs for _ in collection]
 
 
 def get_namespace_uuid(

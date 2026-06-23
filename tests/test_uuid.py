@@ -16,6 +16,7 @@ from cmem_plugin_uuid.plugin_uuid import (
     UUID1ToUUID6,
     UUIDConvert,
     UUIDVersion,
+    uuid8,
 )
 
 # Test UUID1
@@ -396,16 +397,41 @@ def test_uuid7_with_input() -> None:
 def test_uuid8_without_input() -> None:
     """Test UUID8 without input"""
     result = UUID8().transform(inputs=[])
+    assert len(result) == 1
     for item in result:
         assert uuid.UUID(item).version == 8  # noqa: PLR2004
 
 
 def test_uuid8_with_input() -> None:
-    """Test UUID8 without input"""
+    """Test UUID8 with input"""
     result = UUID8().transform(inputs=[["input1"], ["input2"]])
     assert len(result) == 2  # noqa: PLR2004
     for item in result:
         assert uuid.UUID(item).version == 8  # noqa: PLR2004
+
+
+def test_uuid8_with_custom_fields() -> None:
+    """Test UUID8 with all three custom fields set"""
+    a = 0x1234_5678_9ABC
+    b = 0xABC
+    c = 0x1234_5678_9ABC_DEF0
+    result = UUID8(a=str(a), b=str(b), c=str(c)).transform(inputs=[])
+    assert len(result) == 1
+    parsed = uuid.UUID(result[0])
+    assert parsed.version == 8  # noqa: PLR2004
+    assert parsed == uuid8(a, b, c)
+
+
+def test_uuid8_with_partial_custom_fields() -> None:
+    """Test UUID8 with only 'a' set; 'b' and 'c' random"""
+    a = 0x1234_5678_9ABC
+    result = UUID8(a=str(a)).transform(inputs=[["input1"], ["input2"]])
+    assert len(result) == 2  # noqa: PLR2004
+    for item in result:
+        parsed = uuid.UUID(item)
+        assert parsed.version == 8  # noqa: PLR2004
+        # the 48-bit 'a' field occupies the top 48 bits (octets 0-5)
+        assert parsed.int >> 80 == a
 
 
 # Test UUIDConvert
@@ -472,7 +498,7 @@ def test_uuid_version() -> None:
         str(uuid6.uuid6()),
         str(uuid6.uuid1_to_uuid6(uuid.uuid1())),
         str(uuid6.uuid7()),
-        str(uuid6.uuid8()),
+        str(uuid8()),
     ]
     result = UUIDVersion().transform(inputs=[input_values])
     assert len(result) == 8  # noqa: PLR2004
