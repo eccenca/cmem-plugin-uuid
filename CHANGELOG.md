@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/)
 
 
+## [3.1.0] 2026-08-07
+
+### Changed
+
+- Update template
+
+
 ## [3.0.0] 2026-06-23
 
 ### Changed
@@ -17,6 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - UUID8 output is no longer time-ordered. Use UUIDv7 if sortability by creation time is required.
 
+
 ## [2.0.0] 2025-10-16
 
 ### Changed
@@ -27,6 +35,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Breaking Change
 
 - Requires python 3.13 now (>= CMEM 25.3.x)
+
 
 ## [1.1.0] 2025-02-13
 
