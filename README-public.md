@@ -5,7 +5,7 @@ Create universally unique identifiers (UUIDs) versions 1, 3, 4, 5, 6, 7 and 8 in
 
 [![eccenca Corporate Memory][cmem-shield]][cmem-link]
 
-This is a plugin for [eccenca](https://eccenca.com) [Corporate Memory](https://documentation.eccenca.com). You can install it with the [cmemc](https://eccenca.com/go/cmemc) command line client like this:
+This is a plugin for [eccenca Corporate Memory](https://documentation.eccenca.com). You can install it with the [cmemc](https://eccenca.com/go/cmemc) command line client like this:
 
 ```
 cmemc admin workspace python install cmem-plugin-uuid
@@ -14,7 +14,7 @@ cmemc admin workspace python install cmem-plugin-uuid
 [![poetry][poetry-shield]][poetry-link] [![ruff][ruff-shield]][ruff-link] [![mypy][mypy-shield]][mypy-link] [![copier][copier-shield]][copier] 
 
 [cmem-link]: https://documentation.eccenca.com
-[cmem-shield]: https://img.shields.io/endpoint?url=https://dev.documentation.eccenca.com/badge.json
+[cmem-shield]: https://img.shields.io/endpoint?url=https://documentation.eccenca.com/latest/badge.json
 [poetry-link]: https://python-poetry.org/
 [poetry-shield]: https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json
 [ruff-link]: https://docs.astral.sh/ruff/
