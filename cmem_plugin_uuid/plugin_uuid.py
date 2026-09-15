@@ -13,6 +13,7 @@ from cmem_plugin_base.dataintegration.types import BoolParameterType
 from cmem_plugin_uuid.utils import (
     UUID_V3,
     UUID_V5,
+    UUID_V7,
     clock_seq_to_int,
     get_namespace_uuid,
     namespace_hex,
@@ -346,6 +347,107 @@ class UUID7(TransformPlugin):
     def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
         """Transform"""
         return repeat_for_inputs(inputs, lambda: str(uuid6.uuid7()))
+
+
+_CROCKFORD_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
+_CROCKFORD_INDEX = {char: index for index, char in enumerate(_CROCKFORD_ALPHABET)}
+_ULID_STRING_LEN = 26
+
+
+@Plugin(
+    label="UUIDv7 to ULID",
+    categories=["Value", "Identifier"],
+    description="Convert a UUIDv7 string to a 26-character ULID string.",
+    documentation="""UUIDv7 and ULID both encode a 48-bit big-endian
+millisecond Unix timestamp in the same leading bit position, so converting
+a UUIDv7 to a ULID preserves both the timestamp and lexicographic sort
+order. This plugin rejects any input that is not a valid UUIDv7; for a
+lenient bit-level re-encoding of arbitrary UUID versions (which will not
+be chronologically meaningful), no dedicated plugin is provided since the
+result would not really be a ULID in the intended sense.
+""",
+)
+class UUID7ToULID(TransformPlugin):
+    """UUIDv7 to ULID Transform Plugin"""
+
+    @staticmethod
+    def uuid_to_ulid(value: uuid.UUID) -> str:
+        """Re-encode a UUID's 128 bits as a 26-character ULID (Crockford Base32) string.
+
+        Pure bit-reinterpretation, called once the input has already been
+        checked to be a UUIDv7.
+        """
+        int_value = value.int
+        chars = []
+        for _ in range(_ULID_STRING_LEN):
+            chars.append(_CROCKFORD_ALPHABET[int_value & 0x1F])
+            int_value >>= 5
+        return "".join(reversed(chars))
+
+    def convert(self, value: str) -> str:
+        """Convert a single UUIDv7 string to a ULID string"""
+        try:
+            in_uuid = uuid.UUID(value)
+        except ValueError as exc:
+            raise ValueError(f"{value} is not a valid UUID string") from exc
+        if in_uuid.version != UUID_V7:
+            raise ValueError(f"{value} is not a valid UUIDv7 string (version {in_uuid.version})")
+        return self.uuid_to_ulid(in_uuid)
+
+    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
+        """Transform"""
+        return [self.convert(value) for collection in inputs for value in collection]
+
+
+@Plugin(
+    label="ULID to UUIDv7",
+    categories=["Value", "Identifier"],
+    description="Convert a 26-character ULID string to a UUIDv7 string.",
+    documentation="""UUIDv7 and ULID both encode a 48-bit big-endian
+millisecond Unix timestamp in the same leading bit position, so converting
+a ULID to a UUIDv7 preserves both the timestamp and lexicographic sort
+order. The trailing bits of the input are reused as the UUIDv7's random
+portion, with the version (7) and variant (RFC 9562) bits set explicitly
+on output, since a ULID has no such fields of its own.
+""",
+)
+class ULIDToUUID7(TransformPlugin):
+    """ULID to UUIDv7 Transform Plugin"""
+
+    @staticmethod
+    def ulid_to_uuid(value: str) -> uuid.UUID:
+        """Re-encode a 26-character ULID string as a UUID by reinterpreting its bits.
+
+        Does not set version/variant bits; ``convert`` sets them explicitly
+        afterwards.
+        """
+        normalized = value.strip().upper()
+        if len(normalized) != _ULID_STRING_LEN:
+            raise ValueError(f"{value} is not a valid 26-character ULID string")
+        int_value = 0
+        for char in normalized:
+            try:
+                int_value = (int_value << 5) | _CROCKFORD_INDEX[char]
+            except KeyError as exc:
+                raise ValueError(f"{value} is not a valid ULID string") from exc
+        if int_value >= 1 << 128:
+            raise ValueError(f"{value} decodes to more than 128 bits and is not a valid ULID")
+        return uuid.UUID(int=int_value)
+
+    def convert(self, value: str) -> str:
+        """Convert a single ULID string to a UUIDv7 string"""
+        raw_uuid = self.ulid_to_uuid(value)
+        int_value = raw_uuid.int
+        # Set version (7) at bits 76-79 and variant (RFC 9562, '10') at bits 62-63.
+        int_value &= ~(0xF000 << 64)
+        int_value |= UUID_V7 << 76
+        int_value &= ~(0xC000 << 48)
+        int_value |= 0x8000 << 48
+        return str(uuid.UUID(int=int_value))
+
+    def transform(self, inputs: Sequence[Sequence[str]]) -> Sequence[str]:
+        """Transform"""
+        return [self.convert(value) for collection in inputs for value in collection]
 
 
 @Plugin(

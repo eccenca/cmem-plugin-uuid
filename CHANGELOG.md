@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - updated dependencies and template
 
+### Added
+
+- Plugins "UUIDv7 to ULID" and "ULID to UUIDv7"
+
 ## [3.1.0] 2026-08-07
 
 ### Changed

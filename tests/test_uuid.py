@@ -3,6 +3,7 @@
 import uuid
 from hashlib import md5, sha1
 
+import pytest
 import uuid6
 
 from cmem_plugin_uuid.plugin_uuid import (
@@ -13,7 +14,9 @@ from cmem_plugin_uuid.plugin_uuid import (
     UUID6,
     UUID7,
     UUID8,
+    ULIDToUUID7,
     UUID1ToUUID6,
+    UUID7ToULID,
     UUIDConvert,
     UUIDVersion,
     uuid8,
@@ -389,6 +392,79 @@ def test_uuid7_with_input() -> None:
     assert len(result) == 2  # noqa: PLR2004
     for item in result:
         assert uuid.UUID(item).version == 7  # noqa: PLR2004
+
+
+# Test UUID7ToULID
+
+
+def test_uuid7_to_ulid_with_input() -> None:
+    """Test UUID7 to ULID with input, and that the round trip preserves the UUID"""
+    input_values = [str(uuid6.uuid7()), str(uuid6.uuid7())]
+    result = UUID7ToULID().transform(inputs=[[i] for i in input_values])
+    assert len(result) == 2  # noqa: PLR2004
+    for i, item in enumerate(result):
+        assert len(item) == 26  # noqa: PLR2004
+        assert item == item.upper()
+        assert ULIDToUUID7().convert(item) == input_values[i]
+
+
+def test_uuid7_to_ulid_without_input() -> None:
+    """Test UUID7 to ULID without input returns an empty result"""
+    result = UUID7ToULID().transform(inputs=[])
+    assert result == []
+
+
+def test_uuid7_to_ulid_rejects_non_v7() -> None:
+    """Test UUID7 to ULID rejects a non-UUIDv7 input"""
+    input_values = [str(uuid.uuid4())]
+    with pytest.raises(ValueError, match="not a valid UUIDv7 string"):
+        UUID7ToULID().transform(inputs=[input_values])
+
+
+def test_uuid7_to_ulid_rejects_malformed_input() -> None:
+    """Test UUID7 to ULID rejects a malformed UUID string"""
+    with pytest.raises(ValueError, match="not a valid UUID string"):
+        UUID7ToULID().transform(inputs=[["not-a-uuid"]])
+
+
+# Test ULIDToUUID7
+
+
+def test_ulid_to_uuid7_with_input() -> None:
+    """Test ULID to UUIDv7 with input, and that the round trip preserves the ULID"""
+    input_values = [
+        UUID7ToULID.uuid_to_ulid(uuid6.uuid7()),
+        UUID7ToULID.uuid_to_ulid(uuid6.uuid7()),
+    ]
+    result = ULIDToUUID7().transform(inputs=[[i] for i in input_values])
+    assert len(result) == 2  # noqa: PLR2004
+    for i, item in enumerate(result):
+        assert uuid.UUID(item).version == 7  # noqa: PLR2004
+        assert UUID7ToULID.uuid_to_ulid(uuid.UUID(item)) == input_values[i]
+
+
+def test_ulid_to_uuid7_sets_version_and_variant() -> None:
+    """Test ULID to UUIDv7 always sets valid version/variant bits"""
+    # An all-zero ULID decodes to a UUID with no version/variant bits set.
+    input_values = ["0" * 26]
+    result = ULIDToUUID7().transform(inputs=[input_values])
+    assert len(result) == 1
+    parsed = uuid.UUID(result[0])
+    assert parsed.version == 7  # noqa: PLR2004
+    assert parsed.variant == uuid.RFC_4122
+
+
+def test_ulid_to_uuid7_rejects_wrong_length() -> None:
+    """Test ULID to UUIDv7 rejects a string that is not 26 characters long"""
+    with pytest.raises(ValueError, match="not a valid 26-character ULID string"):
+        ULIDToUUID7().transform(inputs=[["too-short"]])
+
+
+def test_ulid_to_uuid7_rejects_invalid_characters() -> None:
+    """Test ULID to UUIDv7 rejects a string with non-Crockford-Base32 characters"""
+    invalid_ulid = "I" * 26
+    with pytest.raises(ValueError, match="not a valid ULID string"):
+        ULIDToUUID7().transform(inputs=[[invalid_ulid]])
 
 
 # Test UUID8

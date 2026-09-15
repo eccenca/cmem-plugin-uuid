@@ -10,6 +10,7 @@ from cmem_plugin_base.dataintegration.parameter.choice import ChoiceParameterTyp
 
 UUID_V3 = 3
 UUID_V5 = 5
+UUID_V7 = 7
 
 uuid3_uuid5_namespace_param = ChoiceParameterType(
     OrderedDict(
