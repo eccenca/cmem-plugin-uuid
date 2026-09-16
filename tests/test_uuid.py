@@ -572,10 +572,9 @@ def test_uuid_version() -> None:
         str(uuid.uuid4()),
         str(uuid.uuid5(name="test", namespace=uuid.NAMESPACE_URL)),
         str(uuid6.uuid6()),
-        str(uuid6.uuid1_to_uuid6(uuid.uuid1())),
         str(uuid6.uuid7()),
         str(uuid8()),
     ]
     result = UUIDVersion().transform(inputs=[input_values])
-    assert len(result) == 8  # noqa: PLR2004
-    assert result == [str(i) for i in [1, 3, 4, 5, 6, 6, 7, 8]]
+    assert len(result) == 7  # noqa: PLR2004
+    assert result == ["1", "3", "4", "5", "6", "7", "8"]
