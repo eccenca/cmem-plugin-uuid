@@ -3,10 +3,12 @@
 import os
 import re
 import uuid
+from collections import OrderedDict
 from collections.abc import Sequence
 
 import uuid6
 from cmem_plugin_base.dataintegration.description import Plugin, PluginParameter
+from cmem_plugin_base.dataintegration.parameter.choice import ChoiceParameterType
 from cmem_plugin_base.dataintegration.plugins import TransformPlugin
 from cmem_plugin_base.dataintegration.types import BoolParameterType
 
@@ -20,8 +22,6 @@ from cmem_plugin_uuid.utils import (
     node_to_int,
     repeat_for_inputs,
     uuid3_uuid5_namespace_param,
-    uuid_convert_param_in,
-    uuid_convert_param_out,
 )
 
 
@@ -526,14 +526,31 @@ class UUID8(TransformPlugin):
     specified in RFC 4122 and the proposed updates""",
     parameters=[
         PluginParameter(
-            param_type=uuid_convert_param_in,
+            param_type=ChoiceParameterType(
+                OrderedDict(
+                    {
+                        "uuid_hex": "UUID/32-char hexadecimal string",
+                        "int": "128-bit integer",
+                        "urn": "URN",
+                    }
+                ),
+            ),
             name="from_format",
             label="From",
             description="Input string format",
             default_value="uuid_hex",
         ),
         PluginParameter(
-            param_type=uuid_convert_param_out,
+            param_type=ChoiceParameterType(
+                OrderedDict(
+                    {
+                        "uuid": "UUID",
+                        "hex": "32-character lowercase hexadecimal string",
+                        "int": "128-bit integer",
+                        "urn": "URN",
+                    }
+                ),
+            ),
             name="to_format",
             label="To",
             description="Output string format",

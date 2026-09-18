@@ -28,32 +28,6 @@ uuid3_uuid5_namespace_param = ChoiceParameterType(
 uuid3_uuid5_namespace_param.allow_only_autocompleted_values = False
 
 
-uuid_convert_param_in = ChoiceParameterType(
-    OrderedDict(
-        {
-            "uuid_hex": "UUID/32-char hexadecimal string",
-            "int": "128-bit integer",
-            "urn": "URN",
-        }
-    ),
-)
-
-uuid_convert_param_in.allow_only_autocompleted_values = True
-
-uuid_convert_param_out = ChoiceParameterType(
-    OrderedDict(
-        {
-            "uuid": "UUID",
-            "hex": "32-character lowercase hexadecimal string",
-            "int": "128-bit integer",
-            "urn": "URN",
-        }
-    ),
-)
-
-uuid_convert_param_out.allow_only_autocompleted_values = True
-
-
 def node_to_int(node: str) -> int:
     """Convert a string representation of a node byte array to an integer"""
     try:
