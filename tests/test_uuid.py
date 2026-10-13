@@ -40,7 +40,7 @@ def test_uuid1_with_value_input() -> None:
         node="",
         clock_seq="",
     ).transform(inputs=input_values)
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for item in result:
         assert uuid.UUID(item).version == 1
 
@@ -52,7 +52,7 @@ def test_uuid1_with_parameter_setting() -> None:
         node="2001",
         clock_seq="1234",
     ).transform(inputs=input_values)
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for item in result:
         assert uuid.UUID(item).version == 1
 
@@ -68,9 +68,9 @@ def test_uuid3_with_namespace_param_as_uuid() -> None:
         namespace=namespace,
         namespace_as_uuid=True,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 3  # noqa: PLR2004
+        assert uuid.UUID(item).version == 3
         assert item == str(uuid.uuid3(namespace=uuid.UUID(namespace), name=input_values[i]))
 
 
@@ -84,9 +84,9 @@ def test_uuid3_with_namespace_param_as_string() -> None:
         namespace=namespace_str,
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 3  # noqa: PLR2004
+        assert uuid.UUID(item).version == 3
         assert item == str(uuid.uuid3(namespace=namespace, name=input_values[i]))
 
 
@@ -97,9 +97,9 @@ def test_uuid3_with_namespace_dns() -> None:
         namespace="namespace_dns",
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 3  # noqa: PLR2004
+        assert uuid.UUID(item).version == 3
         assert item == str(
             uuid.uuid3(
                 namespace=uuid.NAMESPACE_DNS,
@@ -115,9 +115,9 @@ def test_uuid3_with_namespace_url() -> None:
         namespace="namespace_url",
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 3  # noqa: PLR2004
+        assert uuid.UUID(item).version == 3
         assert item == str(
             uuid.uuid3(
                 namespace=uuid.NAMESPACE_URL,
@@ -133,9 +133,9 @@ def test_uuid3_with_namespace_oid() -> None:
         namespace="namespace_oid",
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 3  # noqa: PLR2004
+        assert uuid.UUID(item).version == 3
         assert item == str(
             uuid.uuid3(
                 namespace=uuid.NAMESPACE_OID,
@@ -151,9 +151,9 @@ def test_uuid3_with_namespace_x500() -> None:
         namespace="namespace_x500",
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 3  # noqa: PLR2004
+        assert uuid.UUID(item).version == 3
         assert item == str(
             uuid.uuid3(
                 namespace=uuid.NAMESPACE_X500,
@@ -187,15 +187,15 @@ def test_uuid4_without_input() -> None:
     """Test UUID4 without input"""
     result = UUID4().transform(inputs=[])
     for item in result:
-        assert uuid.UUID(item).version == 4  # noqa: PLR2004
+        assert uuid.UUID(item).version == 4
 
 
 def test_uuid4_with_input() -> None:
     """Test UUID4 with input"""
     result = UUID4().transform(inputs=[["input1"], ["input2"]])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for item in result:
-        assert uuid.UUID(item).version == 4  # noqa: PLR2004
+        assert uuid.UUID(item).version == 4
 
 
 # Test UUID5
@@ -209,9 +209,9 @@ def test_uuid5_with_namespace_param_as_uuid() -> None:
         namespace=namespace,
         namespace_as_uuid=True,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 5  # noqa: PLR2004
+        assert uuid.UUID(item).version == 5
         assert item == str(uuid.uuid5(namespace=uuid.UUID(namespace), name=input_values[i]))
 
 
@@ -225,9 +225,9 @@ def test_uuid5_with_namespace_param_as_string() -> None:
         namespace=namespace_str,
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 5  # noqa: PLR2004
+        assert uuid.UUID(item).version == 5
         assert item == str(uuid.uuid5(namespace=namespace, name=input_values[i]))
 
 
@@ -238,9 +238,9 @@ def test_uuid5_with_namespace_dns() -> None:
         namespace="namespace_dns",
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 5  # noqa: PLR2004
+        assert uuid.UUID(item).version == 5
         assert item == str(
             uuid.uuid5(
                 namespace=uuid.NAMESPACE_DNS,
@@ -256,9 +256,9 @@ def test_uuid5_with_namespace_url() -> None:
         namespace="namespace_url",
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 5  # noqa: PLR2004
+        assert uuid.UUID(item).version == 5
         assert item == str(
             uuid.uuid5(
                 namespace=uuid.NAMESPACE_URL,
@@ -274,9 +274,9 @@ def test_uuid5_with_namespace_oid() -> None:
         namespace="namespace_oid",
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 5  # noqa: PLR2004
+        assert uuid.UUID(item).version == 5
         assert item == str(
             uuid.uuid5(
                 namespace=uuid.NAMESPACE_OID,
@@ -292,9 +292,9 @@ def test_uuid5_with_namespace_x500() -> None:
         namespace="namespace_x500",
         namespace_as_uuid=False,
     ).transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 5  # noqa: PLR2004
+        assert uuid.UUID(item).version == 5
         assert item == str(
             uuid.uuid5(
                 namespace=uuid.NAMESPACE_X500,
@@ -332,7 +332,7 @@ def test_uuid6_without_input() -> None:
     ).transform(inputs=[])
     assert len(result) == 1
     for item in result:
-        assert uuid.UUID(item).version == 6  # noqa: PLR2004
+        assert uuid.UUID(item).version == 6
 
 
 def test_uuid6_with_value_input() -> None:
@@ -342,9 +342,9 @@ def test_uuid6_with_value_input() -> None:
         node="",
         clock_seq="",
     ).transform(inputs=input_values)
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for item in result:
-        assert uuid.UUID(item).version == 6  # noqa: PLR2004
+        assert uuid.UUID(item).version == 6
 
 
 def test_uuid6_with_parameter_setting() -> None:
@@ -354,9 +354,9 @@ def test_uuid6_with_parameter_setting() -> None:
         node="2001",
         clock_seq="1234",
     ).transform(inputs=input_values)
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for item in result:
-        assert uuid.UUID(item).version == 6  # noqa: PLR2004
+        assert uuid.UUID(item).version == 6
 
 
 # Test UUID1ToUUID6
@@ -366,9 +366,9 @@ def test_uuid1_to_uuid6_with_input() -> None:
     """Test UUID1 to UUID6 with input"""
     input_values = [str(uuid.uuid1()), str(uuid.uuid1())]
     result = UUID1ToUUID6().transform(inputs=[[i] for i in input_values])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for i, item in enumerate(result):
-        assert uuid.UUID(item).version == 6  # noqa: PLR2004
+        assert uuid.UUID(item).version == 6
         assert item == str(uuid6.uuid1_to_uuid6(uuid.UUID(input_values[i])))
 
 
@@ -380,15 +380,15 @@ def test_uuid7_without_input() -> None:
     result = UUID7().transform(inputs=[])
     assert len(result) == 1
     for item in result:
-        assert uuid.UUID(item).version == 7  # noqa: PLR2004
+        assert uuid.UUID(item).version == 7
 
 
 def test_uuid7_with_input() -> None:
     """Test UUID7 with input"""
     result = UUID7().transform(inputs=[["input1"], ["input2"]])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for item in result:
-        assert uuid.UUID(item).version == 7  # noqa: PLR2004
+        assert uuid.UUID(item).version == 7
 
 
 # Test UUID8
@@ -399,15 +399,15 @@ def test_uuid8_without_input() -> None:
     result = UUID8().transform(inputs=[])
     assert len(result) == 1
     for item in result:
-        assert uuid.UUID(item).version == 8  # noqa: PLR2004
+        assert uuid.UUID(item).version == 8
 
 
 def test_uuid8_with_input() -> None:
     """Test UUID8 with input"""
     result = UUID8().transform(inputs=[["input1"], ["input2"]])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for item in result:
-        assert uuid.UUID(item).version == 8  # noqa: PLR2004
+        assert uuid.UUID(item).version == 8
 
 
 def test_uuid8_with_custom_fields() -> None:
@@ -418,7 +418,7 @@ def test_uuid8_with_custom_fields() -> None:
     result = UUID8(a=str(a), b=str(b), c=str(c)).transform(inputs=[])
     assert len(result) == 1
     parsed = uuid.UUID(result[0])
-    assert parsed.version == 8  # noqa: PLR2004
+    assert parsed.version == 8
     assert parsed == uuid8(a, b, c)
 
 
@@ -426,10 +426,10 @@ def test_uuid8_with_partial_custom_fields() -> None:
     """Test UUID8 with only 'a' set; 'b' and 'c' random"""
     a = 0x1234_5678_9ABC
     result = UUID8(a=str(a)).transform(inputs=[["input1"], ["input2"]])
-    assert len(result) == 2  # noqa: PLR2004
+    assert len(result) == 2
     for item in result:
         parsed = uuid.UUID(item)
-        assert parsed.version == 8  # noqa: PLR2004
+        assert parsed.version == 8
         # the 48-bit 'a' field occupies the top 48 bits (octets 0-5)
         assert parsed.int >> 80 == a
 
@@ -501,5 +501,5 @@ def test_uuid_version() -> None:
         str(uuid8()),
     ]
     result = UUIDVersion().transform(inputs=[input_values])
-    assert len(result) == 8  # noqa: PLR2004
+    assert len(result) == 8
     assert result == [str(i) for i in [1, 3, 4, 5, 6, 6, 7, 8]]
